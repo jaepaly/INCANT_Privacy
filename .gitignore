@@ -1,0 +1,41 @@
+# 환경 변수 / 시크릿 — 절대 커밋 금지
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+build/
+*.log
+
+# 실데이터 반입 방지 — 샘플은 sample_data/synthetic/ 아래 합성본만 허용
+sample_data/raw/
+sample_data/**/*.real.*
+*.dump
+*.sqlite
+*.db
+
+# 산출물 빌드 결과 (원본은 docs/ 아래 md로 관리)
+reports/out/
+*.tmp.pdf
+
+# OS / 편집기
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
