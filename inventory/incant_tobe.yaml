@@ -1,0 +1,488 @@
+meta:
+  service_id: incant-tobe
+  service_name: INCANT (상용화 가정)
+  version: "0.1"
+  updated: "2026-08-11"
+  basis:
+    - docs/to-be/02_service_model.md
+    - docs/to-be/01_policy_benchmark.md
+  note: |
+    To-Be 인벤토리. 가정에 기반하되 근거 있는 가정만 쓴다.
+    법정 보존기간은 원문 확인 여부를 retention.verified로 구분한다.
+    verified: false인 항목은 근거로 삼기 전에 원문 확인이 필요하다.
+
+# ─────────────────────────────────────────────────────────────
+# 서비스 수준 속성 — 룰의 service.* 참조 대상
+# ─────────────────────────────────────────────────────────────
+service:
+  jurisdictions: [KR, EU]
+  privacy_policy_url: null          # 미수립 — To-Be 설계 대상
+  privacy_notice_eu: null
+  privacy_contact: null
+  data_access_ui: null
+  erasure_mechanism: null
+  age_verification: null
+  child_access_restricted: false
+  age_gate_branching: null          # 관할별 분기 (§5.3에서 채택 결정, 미구현)
+
+# ─────────────────────────────────────────────────────────────
+systems:
+  - {id: SYS-01, name: 게임 클라이언트, location: 이용자 단말, country: KR}
+  - {id: SYS-02, name: 게임 서버, location: 클라우드, country: KR}
+  - {id: SYS-03, name: 회원 DB, location: 클라우드, country: KR}
+  - {id: SYS-04, name: 판정 게이트웨이, location: 클라우드, country: KR}
+  - {id: SYS-05, name: 결제 서버, location: 클라우드, country: KR}
+  - {id: SYS-06, name: 로그 저장소, location: 클라우드, country: KR}
+  - {id: SYS-07, name: 분석 시스템, location: 클라우드 + 외부 SaaS, country: KR/US}
+  - {id: SYS-08, name: 고객센터, location: 외부 SaaS, country: US}
+  - {id: SYS-09, name: 발송 시스템, location: 외부 SaaS, country: KR/DE}
+
+# ─────────────────────────────────────────────────────────────
+# 수탁자·외부 사업자 — 유형과 사업자는 벤치마크 관찰 기반
+# ─────────────────────────────────────────────────────────────
+vendors:
+  - id: V-01
+    name: AWS
+    relation: 위탁
+    task: 클라우드 인프라 운영
+    country: KR
+    is_overseas: false
+    dpa: null
+    note: 국외 백업 구성 시 조건부 국외이전 발생
+  - id: V-02
+    name: Google (Gemini API)
+    relation: 미확정            # ★ 위탁 vs 제3자 제공 — 서비스 모델 §5.1
+    task: 주문 텍스트 의미 판정
+    country: US
+    is_overseas: true
+    dpa: null
+    note: |
+      relation 확정의 선행 조건은 U-01(입력 보관·학습 이용 정책).
+      확인 전까지 어느 쪽도 확정하지 않는다.
+  - id: V-03
+    name: 코리아크레딧뷰로
+    relation: 위탁
+    task: 본인확인·연령확인
+    country: KR
+    is_overseas: false
+    dpa: null
+  - id: V-04
+    name: KG이니시스
+    relation: 위탁
+    task: 결제 대행
+    country: KR
+    is_overseas: false
+    dpa: null
+  - id: V-05
+    name: Zendesk
+    relation: 위탁
+    task: 고객문의 접수·처리
+    country: US
+    is_overseas: true
+    dpa: null
+  - id: V-06
+    name: Infobip
+    relation: 위탁
+    task: SMS·이메일 발송
+    country: DE
+    is_overseas: true
+    dpa: null
+  - id: V-07
+    name: Google Analytics 4
+    relation: 위탁
+    task: 이용 통계 분석
+    country: US
+    is_overseas: true
+    dpa: null
+  - id: V-08
+    name: BattlEye
+    relation: 위탁
+    task: 부정이용 탐지
+    country: DE
+    is_overseas: true
+    dpa: null
+
+# ─────────────────────────────────────────────────────────────
+# 자유 입력 채널 — 룰의 channel.* 참조 대상
+# ─────────────────────────────────────────────────────────────
+channels:
+  - id: CH-01
+    name: 주문 입력창
+    input_type: free_text
+    max_length: 60
+    is_stored: false            # §5.4 원문 미보관 채택
+    is_transferred: true        # V-02로 국외 전송
+    pii_prefilter: null         # 미구현 — F-005 통제 대상
+    special_category_filter: null
+  - id: CH-02
+    name: 고객센터 문의
+    input_type: free_text
+    max_length: null
+    is_stored: true
+    is_transferred: true        # V-05로 국외 전송
+    pii_prefilter: null
+    special_category_filter: null
+  - id: CH-03
+    name: 문의 첨부파일
+    input_type: file
+    is_stored: true
+    is_transferred: true
+    pii_prefilter: null
+    special_category_filter: null
+
+# ─────────────────────────────────────────────────────────────
+# 개인정보 항목
+# ─────────────────────────────────────────────────────────────
+data_items:
+
+  # ── 회원관리 ──────────────────────────────
+  - id: PD-001
+    name: 이메일 주소
+    activity: 회원관리
+    category: 일반
+    purposes: [회원 식별, 인증, 고지 발송]
+    collected_at: 회원가입
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: [V-06]
+    encrypted: true
+
+  - id: PD-002
+    name: 비밀번호
+    activity: 회원관리
+    category: 인증정보
+    purposes: [인증]
+    collected_at: 회원가입
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 탈퇴 즉시, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: []
+    encrypted: true
+    note: 일방향 암호화 저장. 복원 불가
+
+  - id: PD-003
+    name: 닉네임
+    activity: 회원관리
+    category: 일반
+    purposes: [게임 내 표시, 랭킹]
+    collected_at: 회원가입
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03, SYS-02]
+    vendors: []
+    encrypted: false
+
+  - id: PD-004
+    name: 생년월일
+    activity: 회원관리
+    category: 일반
+    purposes: [연령 확인, 아동 식별]
+    collected_at: 회원가입
+    legal_ground: {kr: 법령상 의무, eu: legal_obligation}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: [V-03]
+    encrypted: false
+
+  - id: PD-005
+    name: 연계정보(CI)
+    activity: 회원관리
+    category: 고유식별정보
+    purposes: [본인확인, 중복가입 확인]
+    collected_at: 본인인증
+    legal_ground: {kr: 법령상 의무, eu: legal_obligation}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: [V-03]
+    encrypted: true
+
+  - id: PD-006
+    name: 휴대전화번호
+    activity: 회원관리
+    category: 일반
+    purposes: [본인확인, 고지 발송]
+    collected_at: 본인인증
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: [V-03, V-06]
+    encrypted: true
+
+  - id: PD-007
+    name: 소셜 로그인 식별자
+    activity: 회원관리
+    category: 일반
+    purposes: [간편 로그인]
+    collected_at: 소셜 연동
+    legal_ground: {kr: 동의, eu: consent}
+    retention: {period: 연동 해제 시, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: []
+    encrypted: false
+
+  # ── 게임 이용 ──────────────────────────────
+  - id: PD-008
+    name: 주문 입력 원문
+    activity: 게임 이용
+    category: 일반
+    gdpr_special_category_risk: true
+    purposes: [주문 의미 판정]
+    collected_at: 게임 내 영창 입력
+    channel: CH-01
+    legal_ground: {kr: 미확정, eu: 미확정}
+    retention: {period: 미보관, type: 정책, basis: null, verified: true}
+    stored_in: []
+    vendors: [V-02]
+    overseas: [US]
+    encrypted: true
+    note: |
+      ★ 핵심 항목. 서비스 모델 §5.4에서 원문 미보관을 채택했다.
+      판정 목적으로 국외 전송되나 저장하지 않는다.
+      legal_ground는 V-02의 relation(위탁/제3자 제공)이 확정되어야 결정된다.
+
+  - id: PD-009
+    name: 판정 결과 (구조화 데이터)
+    activity: 게임 이용
+    category: 일반
+    purposes: [게임 효과 적용, 주문서 기능]
+    collected_at: 판정 응답
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-02, SYS-03]
+    vendors: []
+    encrypted: false
+    note: PD-008의 원문 대신 저장하는 구조화 결과. 원문 복원 불가
+
+  - id: PD-010
+    name: 게임 진행 기록
+    activity: 게임 이용
+    category: 행태정보
+    purposes: [진행 상태 유지, 성장 계승]
+    collected_at: 게임 플레이
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 탈퇴 후 30일, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-02, SYS-03]
+    vendors: []
+    encrypted: false
+
+  - id: PD-011
+    name: 랭킹 기록
+    activity: 게임 이용
+    category: 행태정보
+    purposes: [랭킹 산정·공개]
+    collected_at: 게임 플레이
+    legal_ground: {kr: 동의, eu: consent}
+    retention: {period: 시즌 종료 후 6개월, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-02]
+    vendors: []
+    encrypted: false
+
+  # ── 결제 ──────────────────────────────
+  - id: PD-012
+    name: 결제 승인정보
+    activity: 결제
+    category: 일반
+    purposes: [결제 처리]
+    collected_at: 결제 요청
+    legal_ground: {kr: 계약 이행, eu: contract}
+    retention: {period: 5년, type: 법정, basis: 전자상거래법 제6조 제1항 및 시행령 제6조 제1항 — 대금결제 및 재화등의 공급에 관한 기록, verified: true}
+    stored_in: [SYS-05]
+    vendors: [V-04]
+    encrypted: true
+
+  - id: PD-013
+    name: 거래기록 (계약·청약철회)
+    activity: 결제
+    category: 일반
+    purposes: [계약 이행, 분쟁 대응]
+    collected_at: 결제·환불
+    legal_ground: {kr: 법령상 의무, eu: legal_obligation}
+    retention: {period: 5년, type: 법정, basis: 전자상거래법 제6조 제1항 및 시행령 제6조 제1항 — 계약 또는 청약철회 등에 관한 기록, verified: true}
+    stored_in: [SYS-05]
+    vendors: []
+    encrypted: false
+
+  - id: PD-014
+    name: 환불 계좌정보
+    activity: 결제
+    category: 일반
+    purposes: [환불 처리]
+    collected_at: 환불 신청
+    legal_ground: {kr: 계약 이행, eu: contract}
+    retention: {period: 환불 완료 후 즉시 파기, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-05]
+    vendors: []
+    encrypted: true
+
+  - id: PD-024
+    name: 주민등록번호 (제세공과금)
+    activity: 이벤트
+    category: 고유식별정보
+    purposes: [경품 제세공과금 원천징수]
+    collected_at: 고액 경품 지급 시
+    legal_ground: {kr: 법령상 의무, eu: legal_obligation}
+    retention: {period: 5년, type: 법정, basis: 국세기본법 제85조의3 — 장부 등의 비치와 보존, verified: true}
+    stored_in: [SYS-05]
+    vendors: []
+    encrypted: true
+    note: 벤치마크 관찰 — 6개사 중 다수가 동일 목적·근거로 수집한다고 기재
+
+  # ── 고객센터 ──────────────────────────────
+  - id: PD-015
+    name: 문의 본문
+    activity: 고객지원
+    category: 일반
+    gdpr_special_category_risk: true
+    purposes: [문의 응대, 분쟁 처리]
+    collected_at: 고객센터 문의
+    channel: CH-02
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 3년, type: 법정, basis: 전자상거래법 제6조 제1항 및 시행령 제6조 제1항 — 소비자의 불만 또는 분쟁처리에 관한 기록, verified: true}
+    stored_in: [SYS-08]
+    vendors: [V-05]
+    overseas: [US]
+    encrypted: false
+    note: 자유 텍스트 채널. 이용자가 신분증 등 과도한 정보를 담을 수 있음
+
+  - id: PD-016
+    name: 문의 첨부파일
+    activity: 고객지원
+    category: 일반
+    gdpr_special_category_risk: true
+    purposes: [문의 응대]
+    collected_at: 고객센터 문의
+    channel: CH-03
+    legal_ground: {kr: 동의, eu: contract}
+    retention: {period: 3년, type: 법정, basis: 전자상거래법 제6조 제1항 및 시행령 제6조 제1항 — 소비자의 불만 또는 분쟁처리에 관한 기록, verified: true}
+    stored_in: [SYS-08]
+    vendors: [V-05]
+    overseas: [US]
+    encrypted: false
+
+  # ── 접속·로그 ──────────────────────────────
+  - id: PD-017
+    name: IP 주소
+    activity: 서비스 운영
+    category: 일반
+    purposes: [보안, 부정이용 탐지, 접속기록]
+    collected_at: 서비스 접속
+    legal_ground: {kr: 정당한 이익, eu: legitimate_interests}
+    retention: {period: 3개월, type: 조건부, basis: 통신비밀보호법 관행 인용 — 적용 여부 미확정 (U-12), verified: false}
+    stored_in: [SYS-06]
+    vendors: [V-08]
+    encrypted: false
+    note: |
+      ⚠️ 보유기간 근거가 확정되지 않았다. 통신비밀보호법 제15조의2는
+      '전기통신사업자의 협조의무'이며 게임 사업자 적용 여부가 별도 판단 대상이다.
+      U-12 확인 전까지 이 기간을 확정 근거로 쓰지 않는다.
+
+  - id: PD-018
+    name: 접속 일시·기기정보
+    activity: 서비스 운영
+    category: 행태정보
+    purposes: [보안, 통계]
+    collected_at: 서비스 접속
+    legal_ground: {kr: 정당한 이익, eu: legitimate_interests}
+    retention: {period: 3개월, type: 조건부, basis: 통신비밀보호법 관행 인용 — 적용 여부 미확정 (U-12), verified: false}
+    stored_in: [SYS-06]
+    vendors: []
+    encrypted: false
+
+  - id: PD-019
+    name: 광고식별자 (ADID/IDFA)
+    activity: 마케팅
+    category: 행태정보
+    purposes: [맞춤형 광고, 효과 측정]
+    collected_at: 앱 실행
+    legal_ground: {kr: 동의, eu: consent}
+    retention: {period: 동의 철회 시 또는 수집일로부터 1년, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-07]
+    vendors: [V-07]
+    overseas: [US]
+    encrypted: false
+
+  # ── 제재 ──────────────────────────────
+  - id: PD-020
+    name: 제재 이력
+    activity: 이용자 관리
+    category: 행태정보
+    purposes: [부정이용 방지, 재가입 제한]
+    collected_at: 제재 처분
+    legal_ground: {kr: 정당한 이익, eu: legitimate_interests}
+    retention: {period: 3년, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03, SYS-06]
+    vendors: []
+    encrypted: false
+    note: 벤치마크 관찰 범위는 최대 5년·영구정지 시 영구. 최소화 관점에서 3년 채택
+
+  - id: PD-021
+    name: 차단 판정 이력
+    activity: 이용자 관리
+    category: 행태정보
+    gdpr_special_category_risk: true
+    purposes: [부적절 입력 차단, 반복 위반 관리]
+    collected_at: 판정 결과 blocked
+    legal_ground: {kr: 정당한 이익, eu: legitimate_interests}
+    retention: {period: 1년, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-06]
+    vendors: []
+    encrypted: false
+    note: |
+      차단 사유가 된 입력 원문을 함께 남길지가 설계 쟁점.
+      남기면 PD-008의 미보관 결정과 충돌한다. 현재는 판정 라벨만 저장하는 것으로 둔다.
+
+  # ── 마케팅·이벤트 ──────────────────────────────
+  - id: PD-022
+    name: 마케팅 수신 동의 이력
+    activity: 마케팅
+    category: 일반
+    purposes: [수신 동의 관리, 입증]
+    collected_at: 동의·철회 시점
+    legal_ground: {kr: 동의, eu: consent}
+    retention: {period: 동의 철회 후 3년, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: []
+    encrypted: false
+    note: 동의 사실의 입증 책임(GDPR Art.7(1))을 위해 철회 후에도 일정 기간 보관
+
+  - id: PD-023
+    name: 이벤트 참가 정보
+    activity: 이벤트
+    category: 일반
+    purposes: [이벤트 운영, 경품 발송]
+    collected_at: 이벤트 참가
+    legal_ground: {kr: 동의, eu: consent}
+    retention: {period: 이벤트 종료 후 6개월, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: [V-06]
+    encrypted: false
+
+  # ── 아동 ──────────────────────────────
+  - id: PD-025
+    name: 법정대리인 정보
+    activity: 회원관리
+    category: 일반
+    purposes: [아동 회원의 법정대리인 동의 확인]
+    collected_at: 만 14세 미만 가입 시
+    legal_ground: {kr: 법령상 의무, eu: legal_obligation}
+    retention: {period: 아동의 성년 도달 후 3년, type: 정책, basis: null, verified: true}
+    stored_in: [SYS-03]
+    vendors: [V-03]
+    encrypted: true
+    note: 벤치마크 관찰 — 넥슨이 동일 취지의 기간을 기재
+
+# ─────────────────────────────────────────────────────────────
+# 데이터 흐름
+# ─────────────────────────────────────────────────────────────
+flows:
+  - {id: FL-01, name: 회원가입, from: 이용자, to: SYS-03, items: [PD-001, PD-002, PD-003, PD-004, PD-006], type: collect, is_overseas: false, transfer_ground: null}
+  - {id: FL-02, name: 본인확인, from: SYS-03, to: V-03, items: [PD-004, PD-005, PD-006], type: transfer, is_overseas: false, transfer_ground: 위탁}
+  - {id: FL-03, name: 주문 판정, from: SYS-04, to: V-02, items: [PD-008], type: transfer, is_overseas: true, transfer_ground: null, disclosure: null}
+  - {id: FL-04, name: 결제 처리, from: SYS-05, to: V-04, items: [PD-012], type: transfer, is_overseas: false, transfer_ground: 위탁}
+  - {id: FL-05, name: 고객문의, from: 이용자, to: SYS-08, items: [PD-015, PD-016], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-06, name: 발송, from: SYS-09, to: V-06, items: [PD-001, PD-006], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-07, name: 이용 분석, from: SYS-07, to: V-07, items: [PD-019, PD-018], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-08, name: 부정이용 탐지, from: SYS-02, to: V-08, items: [PD-017, PD-018], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-09, name: 접속 로깅, from: SYS-02, to: SYS-06, items: [PD-017, PD-018], type: store, is_overseas: false, transfer_ground: null}
+  - {id: FL-10, name: 탈퇴 파기, from: SYS-03, to: null, items: [PD-001, PD-002, PD-003, PD-004, PD-005, PD-006, PD-009, PD-010], type: delete, is_overseas: false, transfer_ground: null}

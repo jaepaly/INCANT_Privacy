@@ -48,8 +48,10 @@
 - [ ] 판단 보류분 확인 — EDPB Guidelines 3/2018 원문, 한국 적정성 결정의 재이전 커버 범위
 - [x] As-Is Finding 도출 — [docs/as-is/02_findings_asis.md](docs/as-is/02_findings_asis.md) · Finding 6건 (CRITICAL 1 / HIGH 3 / MEDIUM 2)
 - [x] 동종 서비스 처리방침 벤치마크 — [docs/to-be/01_policy_benchmark.md](docs/to-be/01_policy_benchmark.md) · 6개사 12개 문서 (KR판 vs 글로벌판)
-- [ ] To-Be 서비스 모델 및 개인정보 인벤토리
+- [x] To-Be 서비스 모델 — [docs/to-be/02_service_model.md](docs/to-be/02_service_model.md)
+- [x] To-Be 개인정보 인벤토리 — [docs/to-be/03_data_inventory.md](docs/to-be/03_data_inventory.md) · 25개 항목 (원본 `inventory/incant_tobe.yaml`)
 - [ ] 처리대장 (Processing Register)
+- [ ] **룰 엔진 구현** — 룰의 `check_expr`를 인벤토리에 실제로 적용
 - [ ] 룰 확장 — 처리근거·처리위탁·안전조치·영향평가 영역
 - [ ] 리스크 평가 및 대시보드
 - [ ] 통제 참조 구현 — 전송 전 개인정보 탐지 모듈 + 테스트
@@ -68,15 +70,19 @@ rules/
   CATALOG.md            사람이 읽는 카탈로그 — 생성물
   README.md             룰 스키마·ID 체계·작성 규칙
   VERIFICATION_LOG.md   근거 조문 검증 기록
+inventory/
+  incant_tobe.yaml      To-Be 개인정보 인벤토리 — 원본
+  README.md             인벤토리 스키마·룰 엔진과의 대응 관계
 tools/
-  render_rules.py   YAML -> CATALOG.md 생성 및 스키마 검증
-reports/            산출물
+  render_rules.py       rules/*.yaml -> CATALOG.md
+  render_inventory.py   inventory/*.yaml -> 03_data_inventory.md
+reports/                산출물
 ```
 
-룰을 고칠 때는 YAML만 고치고 카탈로그를 다시 생성합니다:
+원본(YAML)만 고치고 문서는 다시 생성합니다. `--check`를 붙이면 동기화 여부만 검증합니다.
 
 ```bash
-python tools/render_rules.py
+python tools/render_rules.py && python tools/render_inventory.py
 ```
 
 ## 원칙
