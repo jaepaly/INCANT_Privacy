@@ -104,7 +104,7 @@
 | `PD-005` | 연계정보(CI) | 법령상 의무 | legal_obligation |
 | `PD-006` | 휴대전화번호 | 동의 | contract |
 | `PD-007` | 소셜 로그인 식별자 | 동의 | consent |
-| `PD-008` | 주문 입력 원문 | 미확정 | 미확정 |
+| `PD-008` | 주문 입력 원문 | 계약 이행 | contract |
 | `PD-009` | 판정 결과 (구조화 데이터) | 동의 | contract |
 | `PD-010` | 게임 진행 기록 | 동의 | contract |
 | `PD-011` | 랭킹 기록 | 동의 | consent |
@@ -128,7 +128,7 @@
 | ID | 사업자 | 관계 | 처리 업무 | 국가 | 국외이전 | 계약(DPA) |
 |---|---|---|---|---|---|---|
 | `V-01` | AWS | 위탁 | 클라우드 인프라 운영 | KR | 미해당 | **미체결** |
-| `V-02` | Google (Gemini API) | 미확정 | 주문 텍스트 의미 판정 | US | **해당** | **미체결** |
+| `V-02` | Google (Gemini API) | 위탁 | 주문 텍스트 의미 판정 | US | **해당** | Google Data Processing Addendum for Products Where Google is a Data Processor (v10, 2026-05-07) — business.safety.google/processorterms/ |
 | `V-03` | 코리아크레딧뷰로 | 위탁 | 본인확인·연령확인 | KR | 미해당 | **미체결** |
 | `V-04` | KG이니시스 | 위탁 | 결제 대행 | KR | 미해당 | **미체결** |
 | `V-05` | Zendesk | 위탁 | 고객문의 접수·처리 | US | **해당** | **미체결** |
@@ -138,8 +138,9 @@
 
 **`V-01` AWS** — 국외 백업 구성 시 조건부 국외이전 발생
 
-**`V-02` Google (Gemini API)** — relation 확정의 선행 조건은 U-01(입력 보관·학습 이용 정책).
-확인 전까지 어느 쪽도 확정하지 않는다.
+**`V-02` Google (Gemini API)** — 근거: docs/to-be/05_llm_vendor_assessment.md (U-01, 2026-08-11)
+Gemini Developer API에는 리전 지정 기능이 없다. 데이터 상주가 요구되면
+Gemini Enterprise Agent Platform(구 Vertex AI)으로의 전환을 검토해야 한다.
 
 ## 4. 데이터 흐름
 
@@ -147,7 +148,7 @@
 |---|---|---|---|---|---|---|---|
 | `FL-01` | 회원가입 | 이용자 | SYS-03 | PD-001, PD-002, PD-003, PD-004, PD-006 | collect | — | **미정의** |
 | `FL-02` | 본인확인 | SYS-03 | V-03 | PD-004, PD-005, PD-006 | transfer | — | 위탁 |
-| `FL-03` | 주문 판정 | SYS-04 | V-02 | PD-008 | transfer | **해당** | **미정의** |
+| `FL-03` | 주문 판정 | SYS-04 | V-02 | PD-008 | transfer | **해당** | 위탁 |
 | `FL-04` | 결제 처리 | SYS-05 | V-04 | PD-012 | transfer | — | 위탁 |
 | `FL-05` | 고객문의 | 이용자 | SYS-08 | PD-015, PD-016 | transfer | **해당** | 위탁 |
 | `FL-06` | 발송 | SYS-09 | V-06 | PD-001, PD-006 | transfer | **해당** | 위탁 |
@@ -195,8 +196,7 @@
 | 삭제 수단 | **미수립** |
 | 연령 확인 | **미수립** |
 | 연령 게이트 관할 분기 | **미수립** |
-| 처리위탁 계약(DPA) | **미체결 8개** — AWS, Google (Gemini API), 코리아크레딧뷰로, KG이니시스, Zendesk, Infobip, Google Analytics 4, BattlEye |
-| 국외이전 근거 미정의 | **FL-03** |
+| 처리위탁 계약(DPA) | **미체결 7개** — AWS, 코리아크레딧뷰로, KG이니시스, Zendesk, Infobip, Google Analytics 4, BattlEye |
 
 ---
 

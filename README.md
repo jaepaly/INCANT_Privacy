@@ -47,8 +47,9 @@
 - [x] As-Is 개인정보 흐름표 — [docs/as-is/01_data_flow_asis.md](docs/as-is/01_data_flow_asis.md)
 - [x] 컴플라이언스 룰 카탈로그 v0.2 — [rules/CATALOG.md](rules/CATALOG.md) · 6개 영역 12룰 (KR 6 / EU 6)
 - [x] 근거 조문 원문 검증 24/24 — [rules/VERIFICATION_LOG.md](rules/VERIFICATION_LOG.md) · 정정 2건, 판단 보류 2건
-- [ ] 판단 보류분 확인 — **U-01 Gemini API 데이터 처리 조건(DPIA 최우선 선행 과제)**, EDPB Guidelines 3/2018, 한국 적정성 결정의 재이전 범위
-- [x] As-Is Finding 도출 — [docs/as-is/02_findings_asis.md](docs/as-is/02_findings_asis.md) · Finding 6건 (CRITICAL 1 / HIGH 3 / MEDIUM 2)
+- [x] **LLM 사업자 데이터 취급 평가 (U-01)** — [docs/to-be/05_llm_vendor_assessment.md](docs/to-be/05_llm_vendor_assessment.md) · 무료/유료 티어 대조, As-Is `F-007` 신설
+- [ ] 판단 보류분 확인 — EDPB Guidelines 3/2018, 한국 적정성 결정의 재이전 범위, Art.36 문언 해석(U-21)
+- [x] As-Is Finding 도출 — [docs/as-is/02_findings_asis.md](docs/as-is/02_findings_asis.md) · Finding 7건 (CRITICAL 1 / HIGH 3 / MEDIUM 2 / LOW 1)
 - [x] 동종 서비스 처리방침 벤치마크 — [docs/to-be/01_policy_benchmark.md](docs/to-be/01_policy_benchmark.md) · 6개사 12개 문서 (KR판 vs 글로벌판)
 - [x] To-Be 서비스 모델 — [docs/to-be/02_service_model.md](docs/to-be/02_service_model.md)
 - [x] To-Be 개인정보 인벤토리 — [docs/to-be/03_data_inventory.md](docs/to-be/03_data_inventory.md) · 25개 항목 (원본 `inventory/incant_tobe.yaml`)

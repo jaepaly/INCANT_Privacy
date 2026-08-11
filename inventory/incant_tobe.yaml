@@ -53,14 +53,29 @@ vendors:
     note: 국외 백업 구성 시 조건부 국외이전 발생
   - id: V-02
     name: Google (Gemini API)
-    relation: 미확정            # ★ 위탁 vs 제3자 제공 — 서비스 모델 §5.1
+    relation: 위탁              # U-01 확인 후 확정 (조건부 — 아래 conditions)
     task: 주문 텍스트 의미 판정
     country: US
     is_overseas: true
-    dpa: null
+    dpa: Google Data Processing Addendum for Products Where Google is a Data Processor (v10, 2026-05-07) — business.safety.google/processorterms/
+    api_product: Gemini Developer API (generativelanguage.googleapis.com)
+    tier: 유료
+    tier_source: |
+      **가정.** 상용 서비스라면 유료 티어를 쓴다는 전제다.
+      As-Is(실제 데모)는 무료 티어이며, 두 티어의 데이터 취급이 다를 수 있으므로
+      As-Is 분석에 To-Be의 티어 전제를 적용하지 않는다.
+    conditions: |
+      위탁 구성이 성립하기 위한 전제 (U-01 조사 결과):
+      ① 활성 결제 계정이 연결된 Cloud 프로젝트로 접근할 것 (티어 요건)
+      ② **로그 데이터셋 공유를 옵트인하지 않을 것** — 옵트인 시 해당 로그가
+         Unpaid Services 약관으로 처리되어 모델 학습에 사용된다
+      ③ 계정·과금·사용 상세(IP·쿠키 식별자 포함) '기타 데이터'는 Google이 독립
+         컨트롤러이므로 프롬프트·응답과 분리해 기술할 것
+      ④ 남용 모니터링 로그 55일 보관(티어 공통)을 인지·기재할 것
     note: |
-      relation 확정의 선행 조건은 U-01(입력 보관·학습 이용 정책).
-      확인 전까지 어느 쪽도 확정하지 않는다.
+      근거: docs/to-be/05_llm_vendor_assessment.md (U-01, 2026-08-11)
+      Gemini Developer API에는 리전 지정 기능이 없다. 데이터 상주가 요구되면
+      Gemini Enterprise Agent Platform(구 Vertex AI)으로의 전환을 검토해야 한다.
   - id: V-03
     name: 코리아크레딧뷰로
     relation: 위탁
@@ -232,7 +247,7 @@ data_items:
     purposes: [주문 의미 판정]
     collected_at: 게임 내 영창 입력
     channel: CH-01
-    legal_ground: {kr: 미확정, eu: 미확정}
+    legal_ground: {kr: 계약 이행, eu: contract}
     retention: {period: 미보관, type: 정책, basis: null, verified: true}
     stored_in: []
     vendors: [V-02]
@@ -241,7 +256,9 @@ data_items:
     note: |
       ★ 핵심 항목. 서비스 모델 §5.4에서 원문 미보관을 채택했다.
       판정 목적으로 국외 전송되나 저장하지 않는다.
-      legal_ground는 V-02의 relation(위탁/제3자 제공)이 확정되어야 결정된다.
+      V-02 relation이 위탁으로 확정되어(U-01) 처리 근거를 계약 이행으로 둔다.
+      국외 이전 근거는 제28조의8 제1항 제3호(계약 이행에 필요한 처리위탁)를 상정하나,
+      제2항 각 호의 고지사항은 아직 작성되지 않았다(disclosure: null).
 
   - id: PD-009
     name: 판정 결과 (구조화 데이터)
@@ -480,7 +497,7 @@ data_items:
 flows:
   - {id: FL-01, name: 회원가입, from: 이용자, to: SYS-03, items: [PD-001, PD-002, PD-003, PD-004, PD-006], type: collect, is_overseas: false, transfer_ground: null}
   - {id: FL-02, name: 본인확인, from: SYS-03, to: V-03, items: [PD-004, PD-005, PD-006], type: transfer, is_overseas: false, transfer_ground: 위탁}
-  - {id: FL-03, name: 주문 판정, from: SYS-04, to: V-02, items: [PD-008], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: null, disclosure: null}
+  - {id: FL-03, name: 주문 판정, from: SYS-04, to: V-02, items: [PD-008], type: transfer, is_overseas: true, transfer_mechanism: SCC (DPA Appendix 3A §7 편입), transfer_ground: 위탁, disclosure: null}
   - {id: FL-04, name: 결제 처리, from: SYS-05, to: V-04, items: [PD-012], type: transfer, is_overseas: false, transfer_ground: 위탁}
   - {id: FL-05, name: 고객문의, from: 이용자, to: SYS-08, items: [PD-015, PD-016], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: 위탁, disclosure: null}
   - {id: FL-06, name: 발송, from: SYS-09, to: V-06, items: [PD-001, PD-006], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: 위탁, disclosure: null}

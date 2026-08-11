@@ -36,7 +36,6 @@
    "target_name": "주문 판정",
    "reasons": [
     "`is_overseas` is_true → true",
-    "`transfer_ground` is_null → null",
     "`disclosure` is_null → null"
    ],
    "legal_basis": [
@@ -795,31 +794,6 @@
     "Art.13 요구 항목을 충족하는 privacy notice 작성",
     "수집 시점(최초 실행·입력 전)에 접근 가능한 위치에 배치",
     "국내 처리방침(제30조 제1항 각 호)과 항목 대조표 작성"
-   ]
-  },
-  {
-   "rule_id": "EU-TRF-001",
-   "jurisdiction": "EU",
-   "conditional": false,
-   "domain": "국외이전",
-   "title": "제3국 이전 근거 부재 및 재이전 미검토",
-   "severity_base": "CRITICAL",
-   "scope": "flows",
-   "target_id": "FL-03",
-   "target_name": "주문 판정",
-   "reasons": [
-    "`is_overseas` is_true → true",
-    "`transfer_mechanism` is_null → null"
-   ],
-   "legal_basis": [
-    "GDPR Art.44",
-    "GDPR Art.45",
-    "GDPR Art.46"
-   ],
-   "remediation": [
-    "Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화",
-    "데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인",
-    "이전 경로 전체를 구간별로 도식화하고 각 구간의 근거 명시"
    ]
   },
   {

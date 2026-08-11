@@ -35,7 +35,24 @@ systems:
   - {id: SYS-A3, name: GitHub Pages, location: 호스팅 사업자, country: US}
 
 vendors:
-  - {id: V-A1, name: "Google (Gemini API)", relation: 미정의, task: 주문 텍스트 판정, country: US, is_overseas: true, dpa: null}
+  - id: V-A1
+    name: "Google (Gemini API)"
+    relation: 위탁 아님 — 수령자의 자기 목적 이용
+    task: 주문 텍스트 판정
+    country: US
+    is_overseas: true
+    dpa: null
+    api_product: Gemini Developer API (generativelanguage.googleapis.com)
+    tier: 무료
+    tier_source: |
+      운영자 확인(2026-08-11). 코드로는 판별할 수 없다 — API 키가 속한 Google
+      프로젝트의 결제 상태에 달려 있다. 서비스 운영자의 진술을 근거로 기록한다.
+    data_use: |
+      무료 티어(Unpaid Services)에서 Google은 제출 콘텐츠와 생성 응답을 자사 제품·
+      서비스·머신러닝 기술의 제공·개선·개발에 사용하며, 품질·제품 개선 목적의 인적
+      검토가 있다. DPA가 제공되지 않으며 Google이 처리자 지위를 부담하지 않는다.
+      약관은 무료 서비스에 개인정보를 제출하지 말라고 직접 지시한다.
+      근거: docs/to-be/05_llm_vendor_assessment.md (U-01)
   - {id: V-A2, name: Cloudflare, relation: 미정의, task: 프록시 실행 환경, country: 미상, is_overseas: true, dpa: null}
   - {id: V-A3, name: GitHub, relation: 미정의, task: 정적 호스팅, country: US, is_overseas: true, dpa: null}
 

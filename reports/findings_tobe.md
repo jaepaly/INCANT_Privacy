@@ -12,11 +12,11 @@
 - 데이터셋: `tobe` — INCANT (상용화 가정) (v0.1)
 - 적용 관할: KR, EU
 - 평가한 룰 **12개** 중 **11개 발동**, 1개 미발동
-- Finding 후보 **68건**
+- Finding 후보 **67건**
 
 | 기본 심각도 | 후보 수 | 발동 룰 |
 |---|---|---|
-| CRITICAL | 5 | `EU-TRF-001` |
+| CRITICAL | 4 | `EU-TRF-001` |
 | HIGH | 59 | `EU-RET-001`, `EU-SPC-001`, `EU-TRP-001`, `KR-RET-001`, `KR-TRF-001`, `KR-TRP-001` |
 | MEDIUM | 4 | `EU-AGE-001`, `EU-RGT-001`, `KR-AGE-001`, `KR-RGT-001` |
 
@@ -24,13 +24,12 @@
 
 ### `EU-TRF-001` 제3국 이전 근거 부재 및 재이전 미검토
 
-국외이전 · EU · 기본 심각도 **CRITICAL** · 대상 5건
+국외이전 · EU · 기본 심각도 **CRITICAL** · 대상 4건
 
 근거: GDPR Art.44 · GDPR Art.45 · GDPR Art.46
 
 | 대상 | 발동 사유 |
 |---|---|
-| `FL-03` 주문 판정 | `is_overseas` is_true → true / `transfer_mechanism` is_null → null |
 | `FL-05` 고객문의 | `is_overseas` is_true → true / `transfer_mechanism` is_null → null |
 | `FL-06` 발송 | `is_overseas` is_true → true / `transfer_mechanism` is_null → null |
 | `FL-07` 이용 분석 | `is_overseas` is_true → true / `transfer_mechanism` is_null → null |
@@ -163,7 +162,7 @@
 
 | 대상 | 발동 사유 |
 |---|---|
-| `FL-03` 주문 판정 | `is_overseas` is_true → true / `transfer_ground` is_null → null / `disclosure` is_null → null |
+| `FL-03` 주문 판정 | `is_overseas` is_true → true / `disclosure` is_null → null |
 | `FL-05` 고객문의 | `is_overseas` is_true → true / `disclosure` is_null → null |
 | `FL-06` 발송 | `is_overseas` is_true → true / `disclosure` is_null → null |
 | `FL-07` 이용 분석 | `is_overseas` is_true → true / `disclosure` is_null → null |
