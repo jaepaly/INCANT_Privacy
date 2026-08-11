@@ -51,10 +51,10 @@
 - [x] To-Be 서비스 모델 — [docs/to-be/02_service_model.md](docs/to-be/02_service_model.md)
 - [x] To-Be 개인정보 인벤토리 — [docs/to-be/03_data_inventory.md](docs/to-be/03_data_inventory.md) · 25개 항목 (원본 `inventory/incant_tobe.yaml`)
 - [ ] 처리대장 (Processing Register)
-- [x] **룰 엔진 구현** — [reports/](reports/) · 룰 12개를 As-Is·To-Be 인벤토리에 적용 (후보 38 / 70건)
+- [x] **룰 엔진 구현** — [reports/](reports/) · 룰 12개를 As-Is·To-Be 인벤토리에 적용 (후보 As-Is 38 / To-Be 68건)
 - [ ] 룰 확장 — 처리근거·처리위탁·안전조치·영향평가 영역
 - [ ] 리스크 평가 및 대시보드
-- [ ] 통제 참조 구현 — 전송 전 개인정보 탐지 모듈 + 테스트
+- [x] **통제 참조 구현** — [controls/](controls/) · `CTRL-001` 전송 전 개인정보 필터 (테스트 35건 통과)
 - [ ] DPIA
 - [ ] 최종 리포트
 
@@ -74,6 +74,10 @@ inventory/
   incant_asis.yaml      As-Is 인벤토리 — 룰 엔진 입력 전용 (정본은 docs/as-is/)
   incant_tobe.yaml      To-Be 개인정보 인벤토리 — 원본
   README.md             인벤토리 스키마·룰 엔진과의 대응 관계
+controls/
+  pii_filter/           CTRL-001 전송 전 개인정보 필터 — 통제 참조 구현
+  README.md             Risk -> Control -> Evidence 매핑
+tests/                  통제 증적
 tools/
   render_rules.py       rules/*.yaml -> CATALOG.md
   render_inventory.py   inventory/*.yaml -> 03_data_inventory.md
@@ -85,6 +89,7 @@ reports/                룰 적용 결과 (생성물)
 
 ```bash
 python tools/render_rules.py && python tools/render_inventory.py && python tools/run_rules.py
+python -m pytest              # 통제 증적
 ```
 
 **엔진이 내는 것은 Finding 후보입니다.** 위험도 산정·리스크 시나리오·개선 우선순위는

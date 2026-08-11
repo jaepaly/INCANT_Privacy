@@ -114,15 +114,15 @@ channels:
     max_length: 60
     is_stored: false            # §5.4 원문 미보관 채택
     is_transferred: true        # V-02로 국외 전송
-    pii_prefilter: null         # 미구현 — F-005 통제 대상
-    special_category_filter: null
+    pii_prefilter: CTRL-001     # controls/pii_filter — 정형 식별자 탐지·차단·마스킹
+    special_category_filter: null   # Art.9 특별범주는 패턴 탐지 대상이 아니다 (CTRL-001 범위 밖)
   - id: CH-02
     name: 고객센터 문의
     input_type: free_text
     max_length: null
     is_stored: true
     is_transferred: true        # V-05로 국외 전송
-    pii_prefilter: null
+    pii_prefilter: CTRL-001     # controls/pii_filter
     special_category_filter: null
   - id: CH-03
     name: 문의 첨부파일

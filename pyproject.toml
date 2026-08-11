@@ -1,0 +1,14 @@
+[project]
+name = "incant-privacy"
+version = "0.1.0"
+description = "자유 텍스트를 외부 생성형 AI로 처리하는 게임 서비스의 개인정보 컴플라이언스 진단"
+requires-python = ">=3.11"
+dependencies = ["PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

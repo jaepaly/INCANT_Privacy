@@ -750,55 +750,6 @@
    ]
   },
   {
-   "rule_id": "KR-SPC-001",
-   "jurisdiction": "KR",
-   "conditional": false,
-   "domain": "특별범주",
-   "title": "자유 텍스트를 통한 민감정보 비의도적 수집·국외전송",
-   "severity_base": "HIGH",
-   "scope": "channels",
-   "target_id": "CH-01",
-   "target_name": "주문 입력창",
-   "reasons": [
-    "`input_type` eq → \"free_text\"",
-    "`pii_prefilter` is_null → null",
-    "`is_transferred` is_true → true"
-   ],
-   "legal_basis": [
-    "개인정보 보호법 제23조 제1항"
-   ],
-   "remediation": [
-    "전송 전 개인정보·민감정보 탐지 및 마스킹 계층 도입",
-    "탐지 시 저장 제외 정책 적용",
-    "최소수집 관점에서 원문 보관 필요성 자체를 재검토"
-   ]
-  },
-  {
-   "rule_id": "KR-SPC-001",
-   "jurisdiction": "KR",
-   "conditional": false,
-   "domain": "특별범주",
-   "title": "자유 텍스트를 통한 민감정보 비의도적 수집·국외전송",
-   "severity_base": "HIGH",
-   "scope": "channels",
-   "target_id": "CH-02",
-   "target_name": "고객센터 문의",
-   "reasons": [
-    "`input_type` eq → \"free_text\"",
-    "`pii_prefilter` is_null → null",
-    "`is_stored` is_true → true",
-    "`is_transferred` is_true → true"
-   ],
-   "legal_basis": [
-    "개인정보 보호법 제23조 제1항"
-   ],
-   "remediation": [
-    "전송 전 개인정보·민감정보 탐지 및 마스킹 계층 도입",
-    "탐지 시 저장 제외 정책 적용",
-    "최소수집 관점에서 원문 보관 필요성 자체를 재검토"
-   ]
-  },
-  {
    "rule_id": "KR-AGE-001",
    "jurisdiction": "KR",
    "conditional": false,
