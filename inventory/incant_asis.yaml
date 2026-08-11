@@ -1,0 +1,71 @@
+meta:
+  service_id: incant-asis
+  service_name: INCANT (실제 배포 데모)
+  version: "0.1"
+  updated: "2026-08-11"
+  pinned_commit: 852bbd544133f840d972cfc667d17a16618d10db
+  basis:
+    - docs/as-is/01_data_flow_asis.md
+  note: |
+    As-Is 인벤토리. **룰 엔진 입력 전용 데이터**다.
+
+    사람이 읽는 As-Is 기술은 docs/as-is/01_data_flow_asis.md가 정본이며,
+    거기에는 코드 permalink 근거가 붙어 있다. 이 파일은 그 문서를 룰이 평가할 수
+    있는 형태로 옮긴 것이므로 **문서로 생성하지 않는다**(중복은 곧 어긋남이다).
+
+    항목 ID는 흐름표와 동일하게 유지해 상호 참조가 가능하다.
+
+service:
+  jurisdictions: [KR]
+  jurisdictions_conditional: [EU]   # Art.3(2) 대상성 미확정 — U-05
+  privacy_policy_url: null
+  privacy_notice_eu: null
+  privacy_contact: null
+  data_access_ui: null
+  erasure_mechanism: null           # localStorage.removeItem 호출 0건
+  age_verification: null
+  child_access_restricted: false
+  age_gate_branching: null
+  deletion_procedure: null
+  retention_evidence: null
+
+systems:
+  - {id: SYS-A1, name: 이용자 단말 localStorage, location: 이용자 단말, country: KR}
+  - {id: SYS-A2, name: Cloudflare Worker 판정 프록시, location: 팀원 개인 계정, country: 미상}
+  - {id: SYS-A3, name: GitHub Pages, location: 호스팅 사업자, country: US}
+
+vendors:
+  - {id: V-A1, name: "Google (Gemini API)", relation: 미정의, task: 주문 텍스트 판정, country: US, is_overseas: true, dpa: null}
+  - {id: V-A2, name: Cloudflare, relation: 미정의, task: 프록시 실행 환경, country: 미상, is_overseas: true, dpa: null}
+  - {id: V-A3, name: GitHub, relation: 미정의, task: 정적 호스팅, country: US, is_overseas: true, dpa: null}
+
+channels:
+  - id: CH-A1
+    name: 주문 입력창
+    input_type: free_text
+    max_length: 60
+    is_stored: true                 # rawText가 localStorage에 영구 저장
+    is_transferred: true
+    pii_prefilter: null
+    special_category_filter: null
+
+data_items:
+  - {id: A-01, name: 주문 입력 원문, activity: 게임 이용, category: 일반, gdpr_special_category_risk: true, purposes: [주문 의미 판정], collected_at: 영창 입력창, channel: CH-A1, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [], vendors: [V-A1], overseas: [US], encrypted: true}
+  - {id: A-02, name: 필살기 공명 정보, activity: 게임 이용, category: 행태정보, purposes: [필살 영창 문맥 제공], collected_at: 이전 주문 이력 파생, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [], vendors: [V-A1], overseas: [US], encrypted: true}
+  - {id: A-03, name: 런 전적 요약, activity: 게임 이용, category: 행태정보, purposes: [보스 도발 대사 생성], collected_at: 누적 플레이 기록, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [], vendors: [V-A1], overseas: [US], encrypted: true}
+  - {id: A-04, name: 진화·융합 작명 요청, activity: 게임 이용, category: 일반, purposes: [격상 주문 작명], collected_at: 주문 진화 시점, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [], vendors: [V-A1], overseas: [US], encrypted: true}
+  - {id: A-05, name: 접속 IP 주소, activity: 서비스 운영, category: 일반, purposes: [레이트리밋], collected_at: HTTP 요청 헤더, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [SYS-A2], vendors: [], encrypted: false}
+  - {id: B-01, name: 주문 입력 원문 (rawText), activity: 게임 이용, category: 일반, gdpr_special_category_risk: true, purposes: [주문서 재사용], collected_at: 영창 입력창, channel: CH-A1, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [SYS-A1], vendors: [], encrypted: false}
+  - {id: B-02, name: 판정 결과 메타, activity: 게임 이용, category: 행태정보, purposes: [주문서 관리], collected_at: 판정 결과, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [SYS-A1], vendors: [], encrypted: false}
+  - {id: B-03, name: 메타 진행도, activity: 게임 이용, category: 행태정보, purposes: [런 간 성장 계승], collected_at: 플레이 누적, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [SYS-A1], vendors: [], encrypted: false}
+  - {id: B-04, name: 행태 프로파일, activity: 게임 이용, category: 행태정보, purposes: [보스 기억 연출], collected_at: 플레이 누적, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [SYS-A1], vendors: [], encrypted: false}
+  - {id: B-05, name: 도감·설정·온보딩 플래그, activity: 게임 이용, category: 행태정보, purposes: [진행 상태 유지], collected_at: 플레이·설정 변경, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [SYS-A1], vendors: [], encrypted: false}
+  - {id: C-01, name: 웹서버 접속 로그, activity: 서비스 운영, category: 일반, purposes: [호스팅 운영], collected_at: 페이지 접속, legal_ground: {kr: null, eu: null}, retention: {period: null, type: 정책, basis: null, verified: false}, stored_in: [], vendors: [V-A3], overseas: [US], encrypted: false}
+
+flows:
+  - {id: FL-A1, name: 주문 판정, from: SYS-A2, to: V-A1, items: [A-01, A-02], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: null, disclosure: null}
+  - {id: FL-A2, name: 보스 대사 생성, from: SYS-A2, to: V-A1, items: [A-03], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: null, disclosure: null}
+  - {id: FL-A3, name: 진화·융합 작명, from: SYS-A2, to: V-A1, items: [A-04], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: null, disclosure: null}
+  - {id: FL-A4, name: 레이트리밋 처리, from: 이용자, to: SYS-A2, items: [A-05], type: process, is_overseas: false, transfer_ground: null, disclosure: null}
+  - {id: FL-A5, name: 단말 저장, from: SYS-A1, to: SYS-A1, items: [B-01, B-02, B-03, B-04, B-05], type: store, is_overseas: false, transfer_ground: null, disclosure: null}
+  - {id: FL-A6, name: 호스팅 접속로그, from: 이용자, to: V-A3, items: [C-01], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: null, disclosure: null}

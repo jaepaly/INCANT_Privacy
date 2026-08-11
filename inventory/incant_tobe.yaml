@@ -24,6 +24,8 @@ service:
   age_verification: null
   child_access_restricted: false
   age_gate_branching: null          # 관할별 분기 (§5.3에서 채택 결정, 미구현)
+  deletion_procedure: null          # 보유기간 경과 데이터의 자동 파기 — 미구현
+  retention_evidence: null          # 파기 실행 기록 — GDPR Art.5(2) 입증책임 대응
 
 # ─────────────────────────────────────────────────────────────
 systems:
@@ -478,11 +480,11 @@ data_items:
 flows:
   - {id: FL-01, name: 회원가입, from: 이용자, to: SYS-03, items: [PD-001, PD-002, PD-003, PD-004, PD-006], type: collect, is_overseas: false, transfer_ground: null}
   - {id: FL-02, name: 본인확인, from: SYS-03, to: V-03, items: [PD-004, PD-005, PD-006], type: transfer, is_overseas: false, transfer_ground: 위탁}
-  - {id: FL-03, name: 주문 판정, from: SYS-04, to: V-02, items: [PD-008], type: transfer, is_overseas: true, transfer_ground: null, disclosure: null}
+  - {id: FL-03, name: 주문 판정, from: SYS-04, to: V-02, items: [PD-008], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: null, disclosure: null}
   - {id: FL-04, name: 결제 처리, from: SYS-05, to: V-04, items: [PD-012], type: transfer, is_overseas: false, transfer_ground: 위탁}
-  - {id: FL-05, name: 고객문의, from: 이용자, to: SYS-08, items: [PD-015, PD-016], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
-  - {id: FL-06, name: 발송, from: SYS-09, to: V-06, items: [PD-001, PD-006], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
-  - {id: FL-07, name: 이용 분석, from: SYS-07, to: V-07, items: [PD-019, PD-018], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
-  - {id: FL-08, name: 부정이용 탐지, from: SYS-02, to: V-08, items: [PD-017, PD-018], type: transfer, is_overseas: true, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-05, name: 고객문의, from: 이용자, to: SYS-08, items: [PD-015, PD-016], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-06, name: 발송, from: SYS-09, to: V-06, items: [PD-001, PD-006], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-07, name: 이용 분석, from: SYS-07, to: V-07, items: [PD-019, PD-018], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: 위탁, disclosure: null}
+  - {id: FL-08, name: 부정이용 탐지, from: SYS-02, to: V-08, items: [PD-017, PD-018], type: transfer, is_overseas: true, transfer_mechanism: null, transfer_ground: 위탁, disclosure: null}
   - {id: FL-09, name: 접속 로깅, from: SYS-02, to: SYS-06, items: [PD-017, PD-018], type: store, is_overseas: false, transfer_ground: null}
   - {id: FL-10, name: 탈퇴 파기, from: SYS-03, to: null, items: [PD-001, PD-002, PD-003, PD-004, PD-005, PD-006, PD-009, PD-010], type: delete, is_overseas: false, transfer_ground: null}

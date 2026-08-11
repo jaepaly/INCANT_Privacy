@@ -1,0 +1,944 @@
+{
+ "dataset": "asis",
+ "findings": [
+  {
+   "rule_id": "KR-TRP-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "투명성",
+   "title": "개인정보 처리방침 미수립·미공개",
+   "severity_base": "HIGH",
+   "scope": "service",
+   "target_id": "(서비스 전체)",
+   "target_name": "(서비스 전체)",
+   "reasons": [
+    "`privacy_policy_url` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제30조 제1항",
+    "개인정보 보호법 제30조 제2항"
+   ],
+   "remediation": [
+    "개인정보 처리방침 수립 — 제30조 제1항 각 호의 법정 기재사항 포함",
+    "게임 타이틀 화면 및 최초 실행 시 상시 접근 가능한 경로 제공",
+    "처리방침 개정 이력 관리 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-TRF-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "국외이전",
+   "title": "국외 이전 고지·동의 부재",
+   "severity_base": "HIGH",
+   "scope": "flows",
+   "target_id": "FL-A1",
+   "target_name": "주문 판정",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_ground` is_null → null",
+    "`disclosure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제28조의8 제1항",
+    "개인정보 보호법 제28조의8 제2항"
+   ],
+   "remediation": [
+    "제28조의8 제1항 각 호 중 어느 근거로 이전하는지 확정",
+    "제2항 각 호 5개 고지사항을 갖춘 국외 이전 현황표 작성",
+    "처리방침에 국외 이전 항목 반영 및 이전 거부 방법·절차 제공",
+    "시행령상 국외 이전 시 보호조치 이행 여부 확인"
+   ]
+  },
+  {
+   "rule_id": "KR-TRF-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "국외이전",
+   "title": "국외 이전 고지·동의 부재",
+   "severity_base": "HIGH",
+   "scope": "flows",
+   "target_id": "FL-A2",
+   "target_name": "보스 대사 생성",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_ground` is_null → null",
+    "`disclosure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제28조의8 제1항",
+    "개인정보 보호법 제28조의8 제2항"
+   ],
+   "remediation": [
+    "제28조의8 제1항 각 호 중 어느 근거로 이전하는지 확정",
+    "제2항 각 호 5개 고지사항을 갖춘 국외 이전 현황표 작성",
+    "처리방침에 국외 이전 항목 반영 및 이전 거부 방법·절차 제공",
+    "시행령상 국외 이전 시 보호조치 이행 여부 확인"
+   ]
+  },
+  {
+   "rule_id": "KR-TRF-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "국외이전",
+   "title": "국외 이전 고지·동의 부재",
+   "severity_base": "HIGH",
+   "scope": "flows",
+   "target_id": "FL-A3",
+   "target_name": "진화·융합 작명",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_ground` is_null → null",
+    "`disclosure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제28조의8 제1항",
+    "개인정보 보호법 제28조의8 제2항"
+   ],
+   "remediation": [
+    "제28조의8 제1항 각 호 중 어느 근거로 이전하는지 확정",
+    "제2항 각 호 5개 고지사항을 갖춘 국외 이전 현황표 작성",
+    "처리방침에 국외 이전 항목 반영 및 이전 거부 방법·절차 제공",
+    "시행령상 국외 이전 시 보호조치 이행 여부 확인"
+   ]
+  },
+  {
+   "rule_id": "KR-TRF-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "국외이전",
+   "title": "국외 이전 고지·동의 부재",
+   "severity_base": "HIGH",
+   "scope": "flows",
+   "target_id": "FL-A6",
+   "target_name": "호스팅 접속로그",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_ground` is_null → null",
+    "`disclosure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제28조의8 제1항",
+    "개인정보 보호법 제28조의8 제2항"
+   ],
+   "remediation": [
+    "제28조의8 제1항 각 호 중 어느 근거로 이전하는지 확정",
+    "제2항 각 호 5개 고지사항을 갖춘 국외 이전 현황표 작성",
+    "처리방침에 국외 이전 항목 반영 및 이전 거부 방법·절차 제공",
+    "시행령상 국외 이전 시 보호조치 이행 여부 확인"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-01",
+   "target_name": "주문 입력 원문",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-02",
+   "target_name": "필살기 공명 정보",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-03",
+   "target_name": "런 전적 요약",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-04",
+   "target_name": "진화·융합 작명 요청",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-05",
+   "target_name": "접속 IP 주소",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-01",
+   "target_name": "주문 입력 원문 (rawText)",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-02",
+   "target_name": "판정 결과 메타",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-03",
+   "target_name": "메타 진행도",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-04",
+   "target_name": "행태 프로파일",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-05",
+   "target_name": "도감·설정·온보딩 플래그",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RET-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "보유·파기",
+   "title": "보유기간 미정의 및 파기 절차 부재",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "C-01",
+   "target_name": "웹서버 접속 로그",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제21조 제1항",
+    "개인정보 보호법 시행령 제16조"
+   ],
+   "remediation": [
+    "항목별 보유기간 정의 및 산정 근거 문서화",
+    "보유기간 경과 데이터의 자동 파기 구현 — 시행령 제16조의 복원 불가능한 방법",
+    "파기 실행 기록 확보 방안 수립"
+   ]
+  },
+  {
+   "rule_id": "KR-RGT-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "정보주체 권리",
+   "title": "정보주체 권리행사 수단 부재",
+   "severity_base": "MEDIUM",
+   "scope": "service",
+   "target_id": "(서비스 전체)",
+   "target_name": "(서비스 전체)",
+   "reasons": [
+    "`data_access_ui` is_null → null",
+    "`privacy_contact` is_null → null"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제35조",
+    "개인정보 보호법 제36조 제1항",
+    "개인정보 보호법 제38조"
+   ],
+   "remediation": [
+    "게임 내 저장 데이터 열람·삭제 기능 제공",
+    "처리방침에 권리행사 방법 및 접수 창구 명시"
+   ]
+  },
+  {
+   "rule_id": "KR-SPC-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "특별범주",
+   "title": "자유 텍스트를 통한 민감정보 비의도적 수집·국외전송",
+   "severity_base": "HIGH",
+   "scope": "channels",
+   "target_id": "CH-A1",
+   "target_name": "주문 입력창",
+   "reasons": [
+    "`input_type` eq → \"free_text\"",
+    "`pii_prefilter` is_null → null",
+    "`is_stored` is_true → true",
+    "`is_transferred` is_true → true"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제23조 제1항"
+   ],
+   "remediation": [
+    "전송 전 개인정보·민감정보 탐지 및 마스킹 계층 도입",
+    "탐지 시 저장 제외 정책 적용",
+    "최소수집 관점에서 원문 보관 필요성 자체를 재검토"
+   ]
+  },
+  {
+   "rule_id": "KR-AGE-001",
+   "jurisdiction": "KR",
+   "conditional": false,
+   "domain": "아동",
+   "title": "연령 확인 수단 부재",
+   "severity_base": "MEDIUM",
+   "scope": "service",
+   "target_id": "(서비스 전체)",
+   "target_name": "(서비스 전체)",
+   "reasons": [
+    "`age_verification` is_null → null",
+    "`child_access_restricted` is_false → false"
+   ],
+   "legal_basis": [
+    "개인정보 보호법 제22조의2 제1항"
+   ],
+   "remediation": [
+    "연령 확인 절차 설계",
+    "만 14세 미만 식별 시 법정대리인 동의 및 동의 여부 확인 절차 적용",
+    "아동 대상 고지문 별도 작성"
+   ]
+  },
+  {
+   "rule_id": "EU-TRP-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "투명성",
+   "title": "정보주체에 대한 정보 제공 의무 미이행",
+   "severity_base": "HIGH",
+   "scope": "service",
+   "target_id": "(서비스 전체)",
+   "target_name": "(서비스 전체)",
+   "reasons": [
+    "`privacy_notice_eu` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.12(1)",
+    "GDPR Art.13",
+    "GDPR Art.13(2)(a)",
+    "WP29 Guidelines (EDPB 승인) — 법령 아님, 유권해석 WP260 rev.01, Annex — Art.13.2(a)/14.2(a) 행 (p.38-39)"
+   ],
+   "remediation": [
+    "Art.13 요구 항목을 충족하는 privacy notice 작성",
+    "수집 시점(최초 실행·입력 전)에 접근 가능한 위치에 배치",
+    "국내 처리방침(제30조 제1항 각 호)과 항목 대조표 작성"
+   ]
+  },
+  {
+   "rule_id": "EU-TRF-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "국외이전",
+   "title": "제3국 이전 근거 부재 및 재이전 미검토",
+   "severity_base": "CRITICAL",
+   "scope": "flows",
+   "target_id": "FL-A1",
+   "target_name": "주문 판정",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_mechanism` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.44",
+    "GDPR Art.45",
+    "GDPR Art.46"
+   ],
+   "remediation": [
+    "Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화",
+    "데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인",
+    "이전 경로 전체를 구간별로 도식화하고 각 구간의 근거 명시"
+   ]
+  },
+  {
+   "rule_id": "EU-TRF-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "국외이전",
+   "title": "제3국 이전 근거 부재 및 재이전 미검토",
+   "severity_base": "CRITICAL",
+   "scope": "flows",
+   "target_id": "FL-A2",
+   "target_name": "보스 대사 생성",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_mechanism` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.44",
+    "GDPR Art.45",
+    "GDPR Art.46"
+   ],
+   "remediation": [
+    "Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화",
+    "데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인",
+    "이전 경로 전체를 구간별로 도식화하고 각 구간의 근거 명시"
+   ]
+  },
+  {
+   "rule_id": "EU-TRF-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "국외이전",
+   "title": "제3국 이전 근거 부재 및 재이전 미검토",
+   "severity_base": "CRITICAL",
+   "scope": "flows",
+   "target_id": "FL-A3",
+   "target_name": "진화·융합 작명",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_mechanism` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.44",
+    "GDPR Art.45",
+    "GDPR Art.46"
+   ],
+   "remediation": [
+    "Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화",
+    "데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인",
+    "이전 경로 전체를 구간별로 도식화하고 각 구간의 근거 명시"
+   ]
+  },
+  {
+   "rule_id": "EU-TRF-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "국외이전",
+   "title": "제3국 이전 근거 부재 및 재이전 미검토",
+   "severity_base": "CRITICAL",
+   "scope": "flows",
+   "target_id": "FL-A6",
+   "target_name": "호스팅 접속로그",
+   "reasons": [
+    "`is_overseas` is_true → true",
+    "`transfer_mechanism` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.44",
+    "GDPR Art.45",
+    "GDPR Art.46"
+   ],
+   "remediation": [
+    "Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화",
+    "데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인",
+    "이전 경로 전체를 구간별로 도식화하고 각 구간의 근거 명시"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-01",
+   "target_name": "주문 입력 원문",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-02",
+   "target_name": "필살기 공명 정보",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-03",
+   "target_name": "런 전적 요약",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-04",
+   "target_name": "진화·융합 작명 요청",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "A-05",
+   "target_name": "접속 IP 주소",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-01",
+   "target_name": "주문 입력 원문 (rawText)",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-02",
+   "target_name": "판정 결과 메타",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-03",
+   "target_name": "메타 진행도",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-04",
+   "target_name": "행태 프로파일",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "B-05",
+   "target_name": "도감·설정·온보딩 플래그",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RET-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "보유·파기",
+   "title": "보관 기간 제한 원칙 위반",
+   "severity_base": "HIGH",
+   "scope": "data_items",
+   "target_id": "C-01",
+   "target_name": "웹서버 접속 로그",
+   "reasons": [
+    "`retention.period` is_null → null",
+    "`service.deletion_procedure` is_null → null",
+    "`service.retention_evidence` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.5(1)(e)",
+    "GDPR Art.5(2)"
+   ],
+   "remediation": [
+    "목적별 보유기간 산정 근거 문서화",
+    "자동 파기 구현 및 실행 기록 확보",
+    "accountability 입증 자료 체계 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-RGT-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "정보주체 권리",
+   "title": "삭제권 행사 수단 부재",
+   "severity_base": "MEDIUM",
+   "scope": "service",
+   "target_id": "(서비스 전체)",
+   "target_name": "(서비스 전체)",
+   "reasons": [
+    "`erasure_mechanism` is_null → null",
+    "`privacy_contact` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.17",
+    "GDPR Art.12(2)"
+   ],
+   "remediation": [
+    "게임 내 데이터 삭제 기능 제공",
+    "privacy notice에 권리 행사 방법 및 연락 창구 명시",
+    "권리 행사 요청 처리 절차 수립"
+   ]
+  },
+  {
+   "rule_id": "EU-SPC-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "특별범주",
+   "title": "자유 텍스트를 통한 특별범주 정보의 비의도적 처리",
+   "severity_base": "HIGH",
+   "scope": "channels",
+   "target_id": "CH-A1",
+   "target_name": "주문 입력창",
+   "reasons": [
+    "`input_type` eq → \"free_text\"",
+    "`special_category_filter` is_null → null",
+    "`is_stored` is_true → true",
+    "`is_transferred` is_true → true"
+   ],
+   "legal_basis": [
+    "GDPR Art.9(1)",
+    "GDPR Art.9(2)",
+    "GDPR Art.5(1)(c)"
+   ],
+   "remediation": [
+    "전송·저장 전 특별범주 탐지 계층 도입",
+    "탐지 시 저장 제외 및 전송 차단 정책 적용",
+    "최소수집 관점에서 자유 텍스트 보관 필요성 재검토"
+   ]
+  },
+  {
+   "rule_id": "EU-AGE-001",
+   "jurisdiction": "EU",
+   "conditional": true,
+   "domain": "아동",
+   "title": "아동 동의 요건 미충족 및 연령 확인 부재",
+   "severity_base": "MEDIUM",
+   "scope": "service",
+   "target_id": "(서비스 전체)",
+   "target_name": "(서비스 전체)",
+   "reasons": [
+    "`child_access_restricted` is_false → false",
+    "`age_verification` is_null → null",
+    "`age_gate_branching` is_null → null"
+   ],
+   "legal_basis": [
+    "GDPR Art.8(1)",
+    "GDPR Art.8(2)"
+   ],
+   "remediation": [
+    "회원국별 아동 연령 기준 조사표 작성 (13~16세 범위)",
+    "관할 판별 후 연령 게이트를 분기하는 구조 설계",
+    "친권자 동의 확인 방법 검토 — Art.8(2)의 '합리적 노력' 수준 정의"
+   ]
+  }
+ ]
+}

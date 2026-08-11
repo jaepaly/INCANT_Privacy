@@ -74,10 +74,10 @@ rules:
       보관기간 항목은 '언급의 유무'가 아니라 '판단 가능성'으로 본다 —
       "목적 달성에 필요한 기간" 수준의 포괄 문구만 있으면 미충족으로 판정한다
       (WP260 rev.01 Annex).
-    check_expr: |
-      service.privacy_notice is None
-        or missing_items(service.privacy_notice, GDPR_ART13_REQUIRED) != []
-        or is_generic_retention_statement(service.privacy_notice.retention)
+    check:
+      scope: service
+      all_of:
+        - {field: privacy_notice_eu, op: is_null}
 
     severity_base: HIGH
     severity_rationale: |
@@ -158,9 +158,11 @@ rules:
       개인정보가 제3국으로 이전되는데
       적정성 결정·적절한 안전조치·특정 상황의 예외 중 어느 근거도 확인되지 않는 경우.
       이전받은 자가 다시 제3국으로 이전하는 경우 그 재이전 근거도 포함한다.
-    check_expr: |
-      any(f.destination.country not in EEA for f in flows)
-        and f.transfer_mechanism is None
+    check:
+      scope: flows
+      all_of:
+        - {field: is_overseas, op: is_true}
+        - {field: transfer_mechanism, op: is_null}
 
     severity_base: CRITICAL
     severity_rationale: |
@@ -231,8 +233,12 @@ rules:
     condition_human: |
       개인정보의 보관 기간이 처리 목적에 필요한 범위로 제한되지 않거나,
       그 제한이 실제로 이행되고 있음을 입증할 수 없는 경우.
-    check_expr: |
-      item.retention_period is None or item.deletion_procedure is None
+    check:
+      scope: data_items
+      any_of:
+        - {field: retention.period, op: is_null}
+        - {field: service.deletion_procedure, op: is_null}
+        - {field: service.retention_evidence, op: is_null}
 
     severity_base: HIGH
     severity_rationale: |
@@ -295,8 +301,11 @@ rules:
     condition_human: |
       삭제권을 포함한 정보주체 권리를 행사할 수단이 제공되지 않거나,
       행사 방법이 안내되지 않아 사실상 행사가 불가능한 경우.
-    check_expr: |
-      service.erasure_mechanism is None or service.privacy_contact is None
+    check:
+      scope: service
+      any_of:
+        - {field: erasure_mechanism, op: is_null}
+        - {field: privacy_contact, op: is_null}
 
     severity_base: MEDIUM
     severity_rationale: |
@@ -355,10 +364,14 @@ rules:
     condition_human: |
       내용이 제한되지 않는 자유 텍스트가 저장 또는 이전되는데
       특별범주 정보의 유입을 탐지·차단하는 통제가 없는 경우.
-    check_expr: |
-      channel.input_type == "free_text"
-        and (channel.is_stored or channel.is_transferred)
-        and channel.special_category_filter is None
+    check:
+      scope: channels
+      all_of:
+        - {field: input_type, op: eq, value: free_text}
+        - {field: special_category_filter, op: is_null}
+      any_of:
+        - {field: is_stored, op: is_true}
+        - {field: is_transferred, op: is_true}
 
     severity_base: HIGH
     severity_rationale: |
@@ -417,8 +430,13 @@ rules:
     condition_human: |
       정보사회서비스가 아동에게 제공될 수 있고 동의를 처리 근거로 삼는데
       연령 확인 수단과 친권자 동의 확인 절차가 없는 경우.
-    check_expr: |
-      service.age_verification is None and service.child_access_restricted is False
+    check:
+      scope: service
+      all_of:
+        - {field: child_access_restricted, op: is_false}
+      any_of:
+        - {field: age_verification, op: is_null}
+        - {field: age_gate_branching, op: is_null}
 
     severity_base: MEDIUM
     severity_rationale: |

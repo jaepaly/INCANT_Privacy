@@ -55,8 +55,10 @@ rules:
     condition_human: |
       개인정보를 처리하는 서비스에 처리방침이 존재하지 않거나,
       존재하더라도 이용자가 쉽게 확인할 수 있는 방법으로 공개되어 있지 않은 경우.
-    check_expr: |
-      service.privacy_policy.url is None
+    check:
+      scope: service
+      all_of:
+        - {field: privacy_policy_url, op: is_null}
 
     severity_base: HIGH
     severity_rationale: |
@@ -116,11 +118,13 @@ rules:
       개인정보가 국외로 이전되는 흐름이 존재하는데
       제28조의8 제1항 각 호의 이전 근거가 확인되지 않거나,
       동의를 근거로 하면서 제2항 각 호의 고지사항이 제공되지 않는 경우.
-    check_expr: |
-      any(f.destination.is_overseas for f in flows)
-        and (f.transfer_ground is None
-             or (f.transfer_ground == "consent"
-                 and missing_items(f.disclosure, PIPA_28_8_2_REQUIRED) != []))
+    check:
+      scope: flows
+      all_of:
+        - {field: is_overseas, op: is_true}
+      any_of:
+        - {field: transfer_ground, op: is_null}
+        - {field: disclosure, op: is_null}
 
     severity_base: HIGH
     severity_rationale: |
@@ -183,8 +187,11 @@ rules:
     condition_human: |
       개인정보 항목에 보유기간이 정의되어 있지 않거나,
       보유기간이 정의되어 있어도 경과 시 파기를 실행하는 절차·수단이 없는 경우.
-    check_expr: |
-      item.retention_period is None or item.deletion_procedure is None
+    check:
+      scope: data_items
+      any_of:
+        - {field: retention.period, op: is_null}
+        - {field: service.deletion_procedure, op: is_null}
 
     severity_base: HIGH
     severity_rationale: |
@@ -245,8 +252,11 @@ rules:
     condition_human: |
       정보주체가 자신의 개인정보를 열람하거나 삭제할 수 있는 수단이
       서비스 내에 제공되지 않고, 권리행사 접수 창구도 안내되지 않는 경우.
-    check_expr: |
-      service.data_access_ui is None and service.privacy_contact is None
+    check:
+      scope: service
+      all_of:
+        - {field: data_access_ui, op: is_null}
+        - {field: privacy_contact, op: is_null}
 
     severity_base: MEDIUM
     severity_rationale: |
@@ -295,10 +305,14 @@ rules:
       이용자가 내용을 자유롭게 작성할 수 있는 입력 채널이 존재하고,
       해당 입력이 저장 또는 외부 전송되는데,
       전송·저장 전에 민감정보를 탐지하거나 차단하는 통제가 없는 경우.
-    check_expr: |
-      channel.input_type == "free_text"
-        and (channel.is_stored or channel.is_transferred)
-        and channel.pii_prefilter is None
+    check:
+      scope: channels
+      all_of:
+        - {field: input_type, op: eq, value: free_text}
+        - {field: pii_prefilter, op: is_null}
+      any_of:
+        - {field: is_stored, op: is_true}
+        - {field: is_transferred, op: is_true}
 
     severity_base: HIGH
     severity_rationale: |
@@ -374,10 +388,11 @@ rules:
     condition_human: |
       아동의 접근이 배제되지 않는 서비스에서, 이 법에 따른 동의를 근거로
       개인정보를 처리하면서 연령 확인 수단과 법정대리인 동의 확인 절차가 없는 경우.
-    check_expr: |
-      service.age_verification is None
-        and service.child_access_restricted is False
-        and any(f.legal_ground == "consent" for f in flows)
+    check:
+      scope: service
+      all_of:
+        - {field: age_verification, op: is_null}
+        - {field: child_access_restricted, op: is_false}
 
     severity_base: MEDIUM
     severity_rationale: |
@@ -402,7 +417,7 @@ rules:
       ⚠️ v0.1 정정 — '아동의 개인정보 처리 시 법정대리인 동의'로 요약했으나
       조건이 빠져 오독 소지가 있었다. 모든 처리에 법정대리인 동의가 필요한 것이
       아니라, '이 법에 따라 동의를 받아야 하는 경우'에 한한다.
-      이에 따라 check_expr에도 동의를 처리근거로 삼는 흐름이 있을 것이라는
+      이에 따라 check에도 동의를 처리근거로 삼는 흐름이 있을 것이라는
       조건을 추가했다.
 
       국내는 만 14세 미만 기준이나 GDPR Art.8은 16세를 기본으로 하고

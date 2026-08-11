@@ -51,7 +51,7 @@
 - [x] To-Be 서비스 모델 — [docs/to-be/02_service_model.md](docs/to-be/02_service_model.md)
 - [x] To-Be 개인정보 인벤토리 — [docs/to-be/03_data_inventory.md](docs/to-be/03_data_inventory.md) · 25개 항목 (원본 `inventory/incant_tobe.yaml`)
 - [ ] 처리대장 (Processing Register)
-- [ ] **룰 엔진 구현** — 룰의 `check_expr`를 인벤토리에 실제로 적용
+- [x] **룰 엔진 구현** — [reports/](reports/) · 룰 12개를 As-Is·To-Be 인벤토리에 적용 (후보 38 / 70건)
 - [ ] 룰 확장 — 처리근거·처리위탁·안전조치·영향평가 영역
 - [ ] 리스크 평가 및 대시보드
 - [ ] 통제 참조 구현 — 전송 전 개인정보 탐지 모듈 + 테스트
@@ -71,19 +71,24 @@ rules/
   README.md             룰 스키마·ID 체계·작성 규칙
   VERIFICATION_LOG.md   근거 조문 검증 기록
 inventory/
+  incant_asis.yaml      As-Is 인벤토리 — 룰 엔진 입력 전용 (정본은 docs/as-is/)
   incant_tobe.yaml      To-Be 개인정보 인벤토리 — 원본
   README.md             인벤토리 스키마·룰 엔진과의 대응 관계
 tools/
   render_rules.py       rules/*.yaml -> CATALOG.md
   render_inventory.py   inventory/*.yaml -> 03_data_inventory.md
-reports/                산출물
+  run_rules.py          룰 엔진 — 룰을 인벤토리에 적용
+reports/                룰 적용 결과 (생성물)
 ```
 
 원본(YAML)만 고치고 문서는 다시 생성합니다. `--check`를 붙이면 동기화 여부만 검증합니다.
 
 ```bash
-python tools/render_rules.py && python tools/render_inventory.py
+python tools/render_rules.py && python tools/render_inventory.py && python tools/run_rules.py
 ```
+
+**엔진이 내는 것은 Finding 후보입니다.** 위험도 산정·리스크 시나리오·개선 우선순위는
+인벤토리에 없는 맥락 판단이므로 사람이 붙입니다 — [reports/README.md](reports/README.md).
 
 ## 원칙
 

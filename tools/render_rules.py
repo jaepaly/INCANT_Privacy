@@ -25,11 +25,13 @@ SOURCES = ["kr.yaml", "eu.yaml"]
 DOMAIN_ORDER = ["투명성", "국외이전", "보유·파기", "정보주체 권리", "특별범주", "아동"]
 
 SEVERITIES = ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+SCOPES = ["service", "data_items", "flows", "channels", "vendors"]
+OPS = ["is_null", "is_not_null", "is_true", "is_false", "eq", "ne", "in", "not_in"]
 VERIFICATIONS = ["확인필요", "확인완료"]
 
 REQUIRED = [
     "id", "domain", "title", "summary", "legal_basis", "condition_human",
-    "check_expr", "severity_base", "severity_rationale", "applies_to",
+    "check", "severity_base", "severity_rationale", "applies_to",
     "remediation", "evidence", "related",
 ]
 REQUIRED_BASIS = ["law", "article", "note", "verification"]
@@ -73,6 +75,15 @@ def validate(rules: list[dict]) -> list[str]:
 
         if rule.get("severity_base") not in SEVERITIES:
             errors.append(f"{where}: severity_base 값 오류 — {SEVERITIES}")
+
+        check = rule.get("check") or {}
+        if check.get("scope") not in SCOPES:
+            errors.append(f"{where}: check.scope 값 오류 — {SCOPES}")
+        if not (check.get("all_of") or check.get("any_of")):
+            errors.append(f"{where}: check에 all_of 또는 any_of가 있어야 한다")
+        for cond in (check.get("all_of") or []) + (check.get("any_of") or []):
+            if not cond.get("field") or cond.get("op") not in OPS:
+                errors.append(f"{where}: check 조건 오류 — field/op 확인 ({cond})")
 
         for basis in rule.get("legal_basis") or []:
             for field in REQUIRED_BASIS:
@@ -196,9 +207,15 @@ def render(metas: dict, rules: list[dict]) -> str:
             add("")
             add(rule["condition_human"].rstrip())
             add("")
-            add("```python")
-            add(rule["check_expr"].rstrip())
-            add("```")
+            chk = rule["check"]
+            add(f"평가 대상: `{chk['scope']}`")
+            add("")
+            for label, key in (("모두 참(AND)", "all_of"), ("하나 이상 참(OR)", "any_of")):
+                if chk.get(key):
+                    add(f"- {label}")
+                    for c in chk[key]:
+                        val = f" `{c['value']}`" if "value" in c else ""
+                        add(f"  - `{c['field']}` **{c['op']}**{val}")
             add("")
             add("**심각도 근거**")
             add("")

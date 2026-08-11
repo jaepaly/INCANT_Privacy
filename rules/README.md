@@ -66,7 +66,12 @@ python tools/render_rules.py
       source: null              # 확인완료면 URL
 
   condition_human: |            # 사람이 읽는 판정 조건
-  check_expr: |                 # 기계 판정용 표현식 (초안)
+  check:                        # 기계 판정용 술어 — 실제로 실행된다
+    scope: service              # service | data_items | flows | channels | vendors
+    all_of:                     # AND (선택)
+      - {field: privacy_policy_url, op: is_null}
+    any_of:                     # OR (선택). all_of와 함께 쓰면 AND로 결합
+      - {field: transfer_ground, op: is_null}
   severity_base: HIGH           # CRITICAL | HIGH | MEDIUM | LOW
   severity_rationale: |         # 왜 이 등급인지
   applies_to: [A-01, B-01]      # 흐름표 항목 ID
@@ -80,9 +85,22 @@ python tools/render_rules.py
 
 `severity_base`는 **룰 자체의 기본 심각도**이며 최종 위험도가 아닙니다. 최종 위험도는 `Likelihood × Impact`로 대상별 평가 단계에서 산출되며, 같은 룰이라도 대상에 따라 달라집니다.
 
-### `check_expr`에 대한 주의
+### `check`에 대해
 
-**현재 실행되지 않습니다.** 평가 데이터 모델이 아직 확정되지 않았습니다. 판정 로직의 의도를 지금 고정해두기 위한 초안 표현식이며, 데이터 모델 확정 시 실제 실행 가능한 형태로 옮깁니다.
+**실행됩니다.** `tools/run_rules.py`가 `inventory/*.yaml`에 적용합니다.
+
+```bash
+python tools/run_rules.py           # 전 데이터셋 실행 -> reports/
+python tools/run_rules.py --check   # 리포트 동기화 검증 (CI용)
+```
+
+`field`는 점 표기 경로이며, `service.` 접두를 붙이면 인벤토리 루트의 `service`를 가리킵니다(컬렉션 scope에서 서비스 수준 통제를 함께 볼 때 씁니다).
+
+연산자: `is_null` `is_not_null` `is_true` `is_false` `eq` `ne` `in` `not_in`
+
+평가 대상 데이터 모델은 [`inventory/README.md`](../inventory/README.md)를 참조하세요.
+
+**엔진이 내는 것은 Finding "후보"입니다.** 위험도 산정·리스크 시나리오·개선 우선순위는 인벤토리에 없는 맥락 판단이므로 사람이 붙입니다. [`reports/README.md`](../reports/README.md) 참조.
 
 ## 관할 축에 대해
 

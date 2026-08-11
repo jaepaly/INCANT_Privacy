@@ -56,9 +56,10 @@
 개인정보를 처리하는 서비스에 처리방침이 존재하지 않거나,
 존재하더라도 이용자가 쉽게 확인할 수 있는 방법으로 공개되어 있지 않은 경우.
 
-```python
-service.privacy_policy.url is None
-```
+평가 대상: `service`
+
+- 모두 참(AND)
+  - `privacy_policy_url` **is_null**
 
 **심각도 근거**
 
@@ -132,11 +133,10 @@ Art.13이 열거하는 고지 항목이 제공되지 않는 경우.
 "목적 달성에 필요한 기간" 수준의 포괄 문구만 있으면 미충족으로 판정한다
 (WP260 rev.01 Annex).
 
-```python
-service.privacy_notice is None
-  or missing_items(service.privacy_notice, GDPR_ART13_REQUIRED) != []
-  or is_generic_retention_statement(service.privacy_notice.retention)
-```
+평가 대상: `service`
+
+- 모두 참(AND)
+  - `privacy_notice_eu` **is_null**
 
 **심각도 근거**
 
@@ -214,12 +214,13 @@ WP260 rev.01 Annex는 그러한 포괄 서술을 명시적으로 불충분하다
 제28조의8 제1항 각 호의 이전 근거가 확인되지 않거나,
 동의를 근거로 하면서 제2항 각 호의 고지사항이 제공되지 않는 경우.
 
-```python
-any(f.destination.is_overseas for f in flows)
-  and (f.transfer_ground is None
-       or (f.transfer_ground == "consent"
-           and missing_items(f.disclosure, PIPA_28_8_2_REQUIRED) != []))
-```
+평가 대상: `flows`
+
+- 모두 참(AND)
+  - `is_overseas` **is_true**
+- 하나 이상 참(OR)
+  - `transfer_ground` **is_null**
+  - `disclosure` **is_null**
 
 **심각도 근거**
 
@@ -284,10 +285,11 @@ C-01은 호스팅 사업자 내부 로그로 서비스 측 통제 범위 밖이�
 적정성 결정·적절한 안전조치·특정 상황의 예외 중 어느 근거도 확인되지 않는 경우.
 이전받은 자가 다시 제3국으로 이전하는 경우 그 재이전 근거도 포함한다.
 
-```python
-any(f.destination.country not in EEA for f in flows)
-  and f.transfer_mechanism is None
-```
+평가 대상: `flows`
+
+- 모두 참(AND)
+  - `is_overseas` **is_true**
+  - `transfer_mechanism` **is_null**
 
 **심각도 근거**
 
@@ -362,9 +364,11 @@ Art.35 DPIA 요건 해당 여부도 함께 검토 대상이나 영역이 달라
 개인정보 항목에 보유기간이 정의되어 있지 않거나,
 보유기간이 정의되어 있어도 경과 시 파기를 실행하는 절차·수단이 없는 경우.
 
-```python
-item.retention_period is None or item.deletion_procedure is None
-```
+평가 대상: `data_items`
+
+- 하나 이상 참(OR)
+  - `retention.period` **is_null**
+  - `service.deletion_procedure` **is_null**
 
 **심각도 근거**
 
@@ -421,9 +425,12 @@ A-05(IP)는 레이트리밋용 인메모리 보관으로 성격이 다르다.
 개인정보의 보관 기간이 처리 목적에 필요한 범위로 제한되지 않거나,
 그 제한이 실제로 이행되고 있음을 입증할 수 없는 경우.
 
-```python
-item.retention_period is None or item.deletion_procedure is None
-```
+평가 대상: `data_items`
+
+- 하나 이상 참(OR)
+  - `retention.period` **is_null**
+  - `service.deletion_procedure` **is_null**
+  - `service.retention_evidence` **is_null**
 
 **심각도 근거**
 
@@ -489,9 +496,11 @@ To-Be에서 파기 로그를 남기는 설계는 EU 쪽 요구에서 나온다.
 정보주체가 자신의 개인정보를 열람하거나 삭제할 수 있는 수단이
 서비스 내에 제공되지 않고, 권리행사 접수 창구도 안내되지 않는 경우.
 
-```python
-service.data_access_ui is None and service.privacy_contact is None
-```
+평가 대상: `service`
+
+- 모두 참(AND)
+  - `data_access_ui` **is_null**
+  - `privacy_contact` **is_null**
 
 **심각도 근거**
 
@@ -544,9 +553,11 @@ Art.17(3)의 예외가 있어 무조건적인 권리는 아니다
 삭제권을 포함한 정보주체 권리를 행사할 수단이 제공되지 않거나,
 행사 방법이 안내되지 않아 사실상 행사가 불가능한 경우.
 
-```python
-service.erasure_mechanism is None or service.privacy_contact is None
-```
+평가 대상: `service`
+
+- 하나 이상 참(OR)
+  - `erasure_mechanism` **is_null**
+  - `privacy_contact` **is_null**
 
 **심각도 근거**
 
@@ -598,11 +609,14 @@ Art.20 데이터 이동권 해당 여부는 처리 근거에 따라 달라지므
 해당 입력이 저장 또는 외부 전송되는데,
 전송·저장 전에 민감정보를 탐지하거나 차단하는 통제가 없는 경우.
 
-```python
-channel.input_type == "free_text"
-  and (channel.is_stored or channel.is_transferred)
-  and channel.pii_prefilter is None
-```
+평가 대상: `channels`
+
+- 모두 참(AND)
+  - `input_type` **eq** `free_text`
+  - `pii_prefilter` **is_null**
+- 하나 이상 참(OR)
+  - `is_stored` **is_true**
+  - `is_transferred` **is_true**
 
 **심각도 근거**
 
@@ -688,11 +702,14 @@ To-Be 단계에서 항목 대조표를 작성해 탐지 대상 집합을 관할�
 내용이 제한되지 않는 자유 텍스트가 저장 또는 이전되는데
 특별범주 정보의 유입을 탐지·차단하는 통제가 없는 경우.
 
-```python
-channel.input_type == "free_text"
-  and (channel.is_stored or channel.is_transferred)
-  and channel.special_category_filter is None
-```
+평가 대상: `channels`
+
+- 모두 참(AND)
+  - `input_type` **eq** `free_text`
+  - `special_category_filter` **is_null**
+- 하나 이상 참(OR)
+  - `is_stored` **is_true**
+  - `is_transferred` **is_true**
 
 **심각도 근거**
 
@@ -750,11 +767,11 @@ Art.5(1)(c) 최소수집 관점에서는 '판정에 사용한 뒤 원문을 보�
 아동의 접근이 배제되지 않는 서비스에서, 이 법에 따른 동의를 근거로
 개인정보를 처리하면서 연령 확인 수단과 법정대리인 동의 확인 절차가 없는 경우.
 
-```python
-service.age_verification is None
-  and service.child_access_restricted is False
-  and any(f.legal_ground == "consent" for f in flows)
-```
+평가 대상: `service`
+
+- 모두 참(AND)
+  - `age_verification` **is_null**
+  - `child_access_restricted` **is_false**
 
 **심각도 근거**
 
@@ -779,7 +796,7 @@ To-Be에서 계정과 동의 절차가 도입되면 심각도가 상향될 항�
 ⚠️ v0.1 정정 — '아동의 개인정보 처리 시 법정대리인 동의'로 요약했으나
 조건이 빠져 오독 소지가 있었다. 모든 처리에 법정대리인 동의가 필요한 것이
 아니라, '이 법에 따라 동의를 받아야 하는 경우'에 한한다.
-이에 따라 check_expr에도 동의를 처리근거로 삼는 흐름이 있을 것이라는
+이에 따라 check에도 동의를 처리근거로 삼는 흐름이 있을 것이라는
 조건을 추가했다.
 
 국내는 만 14세 미만 기준이나 GDPR Art.8은 16세를 기본으로 하고
@@ -814,9 +831,13 @@ To-Be에서 계정과 동의 절차가 도입되면 심각도가 상향될 항�
 정보사회서비스가 아동에게 제공될 수 있고 동의를 처리 근거로 삼는데
 연령 확인 수단과 친권자 동의 확인 절차가 없는 경우.
 
-```python
-service.age_verification is None and service.child_access_restricted is False
-```
+평가 대상: `service`
+
+- 모두 참(AND)
+  - `child_access_restricted` **is_false**
+- 하나 이상 참(OR)
+  - `age_verification` **is_null**
+  - `age_gate_branching` **is_null**
 
 **심각도 근거**
 
