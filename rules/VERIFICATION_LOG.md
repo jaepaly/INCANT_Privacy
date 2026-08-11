@@ -122,9 +122,95 @@ GDPR Art.45(3) 근거. → [CELEX:32022D0254](https://eur-lex.europa.eu/legal-co
 3. **교차검증의 실제 쓸모는 판정이 아니라 후보 제기입니다.** Codex가 제기한 2건을 원문으로 확인하는 것이 이번 검증의 실질이었습니다.
 4. **접근 실패도 기록해야 합니다.** law.go.kr에서 본문을 못 읽었다는 사실은 검증 강도의 한계이며, 나중에 다시 확인할 지점입니다.
 
+---
+
+# U-09 검증 — 2026-08-11
+
+**질문**: Art.13(2)(a)의 "보관 기간 **또는** 산정 기준" 요건에서, "목적 달성에 필요한
+기간" 같은 포괄 문구가 *산정 기준*으로 인정되는가?
+
+**배경**: 처리방침 벤치마크에서 국내 게임사 6곳의 글로벌 영문판 중 5곳이 포괄 문구만
+두고 있었다. 이를 근거로 벤치마크 문서 v0.1은 **"업계 관행이 그러하니 우리 룰의 판정
+조건이 과할 수 있다"** 고 잠정 결론을 냈다. 이 결론을 검증했다.
+
+## 결과 — 잠정 결론이 틀렸다
+
+### 1차 근거 (원문 직접 확인)
+
+**① 조문** — Art.13(2)(a):
+
+> "the period for which the personal data will be stored, **or if that is not
+> possible**, the criteria used to determine that period"
+
+산정 기준은 기간 제시가 *불가능한 경우*의 대체 수단이며, 동등한 선택지가 아니다.
+
+**② 유권해석** — WP260 rev.01, Annex의 Art.13.2(a)·14.2(a) 행 (p.38-39):
+
+> The storage period (or criteria to determine it) may be dictated by factors such
+> as statutory requirements or industry guidelines but should be phrased in a way
+> that allows the data subject to assess, on the basis of his or her own situation,
+> what the retention period will be for specific data/purposes.
+> **It is not sufficient for the data controller to generically state that personal
+> data will be kept as long as necessary for the legitimate purposes of the
+> processing.** Where relevant, the different storage periods should be stipulated
+> for different categories of personal data and/or different processing purposes,
+> including where appropriate, archiving periods.
+
+→ **포괄 문구는 명시적으로 불충분하다고 되어 있다.**
+
+### 확인 방법
+
+| 문서 | 확인 내용 |
+|---|---|
+| WP260 (원본, 17/EN) | 루마니아 DPA 게시본 PDF를 내려받아 본문 추출. p.33-34 Annex에서 해당 문구 확인 |
+| **WP260 rev.01** | EC Article 29 뉴스룸 게시 PDF(`newsroom/article29/items/622227`)를 내려받아 본문 추출. 표지에 "Adopted on 29 November 2017 / As last Revised and Adopted on **11 April 2018**" 확인. p.38-39 Annex에서 **원본과 동일한 문구** 확인 |
+
+두 버전 모두에서 문구가 유지됨을 확인했다. WebFetch로는 PDF 본문이 파싱되지 않아
+로컬로 내려받아 직접 추출했다.
+
+### 교차검증 — 실행되지 않음
+
+Codex CLI가 stdin 대기 상태로 멈춰 결과를 내지 못했다(출력 0바이트).
+Gemini는 이전 검증에서 WebSearch 쿼터(429) 이력이 있어 시도하지 않았다.
+
+**다만 이 건은 교차검증 없이도 근거가 충분하다.** 조문과 가이드라인 원문을 직접
+읽었고, 가이드라인은 두 버전에서 동일 문구를 확인했다. 모델 의견보다 강한 증거다.
+
+## 파급 — 두 가지를 고쳤다
+
+**① 캘리브레이션 결론 반전**
+
+"룰이 과하다" → **"가이드라인 기준에 미달하는 관행이 업계 전반에 퍼져 있다"**.
+판정 조건을 완화하지 않고, '언급 여부'가 아니라 **'판단 가능성'** 기준으로 정밀화했다.
+`EU-TRP-001`에 Art.13(2)(a)와 WP260 rev.01을 근거로 추가했다.
+
+**② 룰 두 개를 혼동한 것을 발견**
+
+벤치마크가 측정한 것은 `EU-RET-001`이 아니라 `EU-TRP-001`이었다.
+
+| 룰 | 근거 | 측정 대상 | 처리방침으로 측정 가능? |
+|---|---|---|---|
+| `EU-TRP-001` | Art.13(2)(a) | 보관기간을 **고지**했는가 | 가능 |
+| `EU-RET-001` | Art.5(1)(e) | 실제로 필요 기간을 넘겨 **보관**하는가 | **불가능** |
+
+`EU-RET-001`은 공시 문서로 캘리브레이션할 수 없다. 시스템·DB 실사가 필요하다.
+두 룰의 `notes`에 이 구분을 기록했다.
+
+## 남는 주의
+
+WP260 rev.01은 **법령이 아니라 WP29가 채택하고 EDPB가 승인한 유권해석 문서**다.
+조문과 구속력의 성격이 다르므로 산출물에서 둘을 같은 층위로 인용하지 않는다.
+룰의 `legal_basis`에도 그 성격을 라벨에 명시했다.
+
+---
+
 ## 다음 검증 대상
 
 - U-05 — EDPB Guidelines 3/2018 원문
 - U-06 — Decision (EU) 2022/254 본문 및 Supplemental Rules
+- U-07 — 자유 텍스트 채널 유입 실태 (측정 필요, 문헌 검증 대상 아님)
+- U-08 — 개인정보 보호법 제2조 제1호 및 나목 결합 용이성 판단 기준
+- U-10 — 전자상거래법·통신비밀보호법·국세기본법의 법정 보존기간 원문
+- U-11 — 개인정보 보호법 제26조 제6항 재위탁 공개 의무의 범위
 - 국내 민감정보(제23조)와 GDPR Art.9 특별범주의 항목 대조 — 고유식별정보(제24조)·생체인식정보의 국내 취급 위치 확인 필요
 - 다음 룰 배치(처리근거·처리위탁·안전조치·영향평가)의 근거 조문
