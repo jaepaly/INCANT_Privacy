@@ -46,7 +46,7 @@
 - [x] 컴플라이언스 룰 카탈로그 v0.2 — [rules/CATALOG.md](rules/CATALOG.md) · 6개 영역 12룰 (KR 6 / EU 6)
 - [x] 근거 조문 원문 검증 24/24 — [rules/VERIFICATION_LOG.md](rules/VERIFICATION_LOG.md) · 정정 2건, 판단 보류 2건
 - [ ] 판단 보류분 확인 — EDPB Guidelines 3/2018 원문, 한국 적정성 결정의 재이전 커버 범위
-- [ ] As-Is Finding 도출 (룰셋 적용)
+- [x] As-Is Finding 도출 — [docs/as-is/02_findings_asis.md](docs/as-is/02_findings_asis.md) · Finding 6건 (CRITICAL 1 / HIGH 3 / MEDIUM 2)
 - [ ] 동종 서비스 처리방침 벤치마크 (KR판 vs EU판 비교)
 - [ ] To-Be 서비스 모델 및 개인정보 인벤토리
 - [ ] 처리대장 (Processing Register)
