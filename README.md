@@ -43,8 +43,9 @@
 ## 진행 상황
 
 - [x] As-Is 개인정보 흐름표 — [docs/as-is/01_data_flow_asis.md](docs/as-is/01_data_flow_asis.md)
-- [x] 컴플라이언스 룰 카탈로그 v0.1 — [rules/CATALOG.md](rules/CATALOG.md) · 6개 영역 12룰 (KR 6 / EU 6)
-- [ ] **근거 조문 원문 검증 24건** — 현재 전부 `확인필요` 상태
+- [x] 컴플라이언스 룰 카탈로그 v0.2 — [rules/CATALOG.md](rules/CATALOG.md) · 6개 영역 12룰 (KR 6 / EU 6)
+- [x] 근거 조문 원문 검증 24/24 — [rules/VERIFICATION_LOG.md](rules/VERIFICATION_LOG.md) · 정정 2건, 판단 보류 2건
+- [ ] 판단 보류분 확인 — EDPB Guidelines 3/2018 원문, 한국 적정성 결정의 재이전 커버 범위
 - [ ] As-Is Finding 도출 (룰셋 적용)
 - [ ] 동종 서비스 처리방침 벤치마크 (KR판 vs EU판 비교)
 - [ ] To-Be 서비스 모델 및 개인정보 인벤토리
@@ -62,10 +63,11 @@ docs/
   as-is/            실제 코드 기반 분석 (근거: permalink)
   to-be/            상용화 가정 분석 (근거: 처리방침 벤치마크)
 rules/
-  kr.yaml           국내 개인정보 보호법 룰 — 원본
-  eu.yaml           GDPR 룰 — 원본
-  CATALOG.md        사람이 읽는 카탈로그 — 생성물
-  README.md         룰 스키마·ID 체계·작성 규칙
+  kr.yaml               국내 개인정보 보호법 룰 — 원본
+  eu.yaml               GDPR 룰 — 원본
+  CATALOG.md            사람이 읽는 카탈로그 — 생성물
+  README.md             룰 스키마·ID 체계·작성 규칙
+  VERIFICATION_LOG.md   근거 조문 검증 기록
 tools/
   render_rules.py   YAML -> CATALOG.md 생성 및 스키마 검증
 reports/            산출물
@@ -79,7 +81,7 @@ python tools/render_rules.py
 
 ## 원칙
 
-- **조문은 원문으로 확인합니다.** 국가법령정보센터, EUR-Lex, EDPB 가이드라인. 각 룰에 근거 조문과 확인일자를 병기합니다.
+- **조문은 원문으로 확인합니다.** 각 룰에 근거 조문·확인일자·실제로 읽은 출처 URL을 병기합니다. 교차검증에 다른 모델을 쓰되, **모델 합의는 원문을 대체하지 않습니다** — 실제로 한 모델이 확신도 "높음"으로 틀린 조문 내용을 답한 사례가 있습니다([검증 기록](rules/VERIFICATION_LOG.md)).
 - **판단을 보류한 것은 보류했다고 씁니다.** 코드나 공개 문서로 확인할 수 없는 항목은 추정으로 채우지 않고 "미확인"으로 남깁니다.
 - **이 저장소에는 실제 개인정보를 두지 않습니다.** 샘플 데이터는 전부 합성이며, 특정 개인을 식별할 수 있는 정보는 마스킹합니다.
 

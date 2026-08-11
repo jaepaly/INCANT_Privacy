@@ -1,28 +1,22 @@
 meta:
   jurisdiction: EU
   jurisdiction_name: EU — General Data Protection Regulation (GDPR)
-  version: "0.1"
+  version: "0.2"
   updated: "2026-08-10"
   note: |
-    모든 legal_basis의 verification이 '확인필요' 상태다.
-    EUR-Lex 원문 및 EDPB 가이드라인 대조 전이므로 조항 번호·항 구분에 오류가 있을 수 있다.
+    v0.2에서 전 조항 원문 대조 완료.
 
-  applicability: |
-    ⚠️ As-Is(INCANT 데모)에 GDPR이 적용되는지 자체가 확정되지 않았다.
+    검증 경로: EUR-Lex의 CELEX:32016R0679 전문 페이지는 본문 추출 시 recital
+    구간에서 잘려 조항 본문에 도달하지 못했다. 따라서 조항 단위 대조는
+    gdpr-info.eu의 조항별 페이지로 수행했다. 각 legal_basis의 source가 실제로
+    확인한 URL이다.
 
-    Art.3(2)(a)는 EU 역내 정보주체에게 재화·용역을 '제공(offering)'하는 경우를 요건으로
-    하며, 단순히 웹에서 접근 가능하다는 사실만으로는 부족하고 EU를 향한 의도가
-    인정되어야 한다는 것이 일반적 해석이다(EDPB Guidelines 3/2018 — 확인필요).
+    권위 있는 원문은 EUR-Lex(CELEX:32016R0679)이며, 인용을 공식 문서에 쓸 때는
+    EUR-Lex 본문으로 다시 대조할 것.
+    https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679
 
-    INCANT은 한국어 전용 해커톤 데모로 EU 이용자를 대상으로 하지 않으며,
-    다국어 지원·EU 통화 표기·EU 대상 홍보가 없다. 따라서 현 상태에서 GDPR이
-    적용된다고 단정할 수 없다.
-
-    그러므로 이 룰셋을 As-Is에 적용한 결과는 **"GDPR이 적용된다고 가정할 경우"의
-    조건부 판정**으로 읽어야 한다. 판정 결과를 위반 사실로 기재하지 않는다.
-
-    반대로 To-Be(스토어 출시·다국어 지원)에서는 적용 요건이 충족될 가능성이 높으므로,
-    이 룰셋은 To-Be에서 무조건부로 적용된다.
+    교차검증: Codex CLI와 Gemini CLI로 독립 검증을 병행했다.
+    GDPR 조항에 대해서는 세 판정이 모두 일치했다.
 
 rules:
   # ────────────────────────────────────────────────────────────
@@ -34,16 +28,23 @@ rules:
     legal_basis:
       - law: GDPR
         article: Art.12(1)
-        note: 간결하고 이해하기 쉬우며 접근 가능한 형태로 제공
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          Arts.13-14의 정보를 간결·투명·이해하기 쉽고 접근 가능한 형태로,
+          명확하고 평이한 언어로 제공할 의무
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-12-gdpr/
       - law: GDPR
         article: Art.13
-        note: 정보주체로부터 직접 수집하는 경우 제공해야 할 항목
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          'Information to be provided where personal data are collected from the
+          data subject' — 컨트롤러 신원·연락처, DPO, 처리목적 및 legal basis,
+          수령인 또는 수령인의 범주, 제3국 이전 및 그 근거(적정성 결정 또는
+          적절한 안전조치), 보관기간 또는 산정 기준, 정보주체의 권리,
+          감독기구 불만제기권 등
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-13-gdpr/
 
     condition_human: |
       정보주체로부터 직접 개인정보를 수집하면서
@@ -63,7 +64,7 @@ rules:
     remediation:
       - Art.13 요구 항목을 충족하는 privacy notice 작성
       - 수집 시점(최초 실행·입력 전)에 접근 가능한 위치에 배치
-      - 국내 처리방침과 항목 대조표 작성
+      - 국내 처리방침(제30조 제1항 각 호)과 항목 대조표 작성
 
     evidence:
       - privacy notice 문서 및 Art.13 항목 매핑표
@@ -71,9 +72,9 @@ rules:
 
     related: [KR-TRP-001]
     notes: |
-      국내 제30조 대비 요구 항목이 더 구체적이다 — 수령인 또는 수령인의 범주,
-      제3국 이전 시 적정성 결정 또는 적절한 안전조치의 근거, 보유기간 또는
-      그 산정 기준, 감독기구에 대한 불만제기권 등.
+      원문 대조 결과 Art.13이 요구하는 항목에 '수령인 또는 수령인의 범주',
+      '제3국 이전 및 그 근거', '보관기간 또는 산정 기준', '감독기구 불만제기권'이
+      모두 포함됨을 확인했다. 국내 제30조보다 열거가 구체적이다.
 
       To-Be에서 문서를 하나만 만들 경우 KR·EU 요구 항목의 합집합으로 설계하고,
       관할별로 필요한 부분만 노출하는 구조를 검토할 것.
@@ -87,22 +88,28 @@ rules:
     legal_basis:
       - law: GDPR
         article: Art.44
-        note: 제3국 이전의 일반 원칙
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          'General principle for transfers' — Chapter V의 조건을 충족해야만 제3국·
+          국제기구로 이전할 수 있으며, 이는 **제3국에서 또 다른 제3국으로의
+          재이전(onward transfers)에도 적용된다**고 문언에 명시되어 있다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-44-gdpr/
       - law: GDPR
         article: Art.45
-        note: 적정성 결정에 근거한 이전
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: "'Transfers on the basis of an adequacy decision' — 집행위원회의 적정성 결정에 근거한 이전"
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-45-gdpr/
       - law: GDPR
         article: Art.46
-        note: 적절한 안전조치에 근거한 이전
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          'Transfers subject to appropriate safeguards' — Art.45(3) 결정이 없는 경우,
+          적절한 안전조치와 집행 가능한 정보주체 권리·효과적 구제수단을 전제로 한 이전.
+          제2항에 표준 데이터보호 조항(SCC) 등이 열거된다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-46-gdpr/
 
     condition_human: |
       개인정보가 제3국으로 이전되는데
@@ -123,7 +130,7 @@ rules:
     remediation:
       - Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화
       - 데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인
-      - 이전 경로 전체를 단계별로 도식화하고 각 구간의 근거 명시
+      - 이전 경로 전체를 구간별로 도식화하고 각 구간의 근거 명시
 
     evidence:
       - 이전 경로 도식 및 구간별 근거 대조표
@@ -136,9 +143,20 @@ rules:
 
         EU 정보주체 → 국내 서비스 → 미국 LLM 사업자
 
-      한국은 EU 적정성 결정 대상국이므로(2021년 채택 — 확인필요) 첫 구간은
-      상대적으로 수월하나, 적정성 결정은 그 다음 구간(재이전)을 커버하지 않는다.
-      두 번째 구간의 근거를 별도로 확보해야 한다.
+      Art.44 원문에서 Chapter V의 조건이 재이전(onward transfer)에도 적용된다고
+      명시하고 있음을 확인했다. 따라서 두 번째 구간을 검토 대상에서 뺄 수 없다.
+
+      첫 구간(EU→KR)에 대해서는 집행위원회가 한국 적정성 결정을 채택했다 —
+      Commission Implementing Decision (EU) 2022/254, 2021-12-17 채택,
+      GDPR Art.45(3) 근거. EUR-Lex 원문으로 확인.
+      https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022D0254
+
+      ⚠️ **미해결 쟁점** — 한국 적정성 결정이 KR→US 재이전까지 어느 범위로
+      커버하는지에 대해 교차검증 결과가 엇갈렸다.
+      Codex는 "재이전을 자동 허용하지 않으며 blanket 근거로 쓸 수 없다"고 보았고,
+      Gemini는 "Supplemental Rules를 통해 실질적으로 커버한다"고 보았다.
+      결정문 본문과 Supplemental Rules를 직접 읽고 판단해야 하며, 그 전까지
+      이 문서는 어느 쪽도 채택하지 않는다. (미확인 U-06)
 
       Art.35 DPIA 요건 해당 여부도 함께 검토 대상이나 영역이 달라
       다음 배치(DPA 영역)에서 다룬다.
@@ -152,16 +170,20 @@ rules:
     legal_basis:
       - law: GDPR
         article: Art.5(1)(e)
-        note: storage limitation — 필요한 기간을 초과하지 않는 형태로 보관
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          'storage limitation' — 처리 목적에 필요한 기간을 넘겨 정보주체를 식별할 수
+          있는 형태로 보관하지 않을 것
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-5-gdpr/
       - law: GDPR
         article: Art.5(2)
-        note: accountability — 원칙 준수를 입증할 책임
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          'accountability' — 컨트롤러는 Art.5(1) 준수에 책임을 지며
+          그 준수를 입증할 수 있어야 한다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-5-gdpr/
 
     condition_human: |
       개인정보의 보관 기간이 처리 목적에 필요한 범위로 제한되지 않거나,
@@ -171,7 +193,7 @@ rules:
 
     severity_base: HIGH
     severity_rationale: |
-      Art.5는 원칙 조항이며 Art.5(2)에 따라 준수 사실을 입증할 책임이 처리자에게 있다.
+      Art.5는 원칙 조항이며 Art.5(2)에 따라 준수 사실을 입증할 책임이 컨트롤러에게 있다.
       기간 정의와 파기 수단이 모두 없으면 입증 자체가 불가능하다.
 
     applies_to: [A-05, B-01, B-02, B-03, B-04, B-05]
@@ -188,7 +210,7 @@ rules:
 
     related: [KR-RET-001]
     notes: |
-      국내 제21조가 '보유기간 경과 시 파기'라는 행위 의무 중심인 데 비해
+      국내 제21조 제1항이 '보유기간 경과 시 지체 없이 파기'라는 행위 의무 중심인 데 비해
       Art.5(1)(e)는 원칙 + 입증책임(Art.5(2)) 구조다.
       To-Be에서 파기 로그를 남기는 설계는 EU 쪽 요구에서 나온다.
 
@@ -201,16 +223,18 @@ rules:
     legal_basis:
       - law: GDPR
         article: Art.17
-        note: right to erasure
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          "Right to erasure ('right to be forgotten')" — 다만 Art.17(1)의 사유와
+          Art.17(3)의 예외가 있어 무조건적인 권리는 아니다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-17-gdpr/
       - law: GDPR
         article: Art.12(2)
-        note: 정보주체의 권리 행사를 용이하게 할 의무
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: 컨트롤러는 Arts.15-22에 따른 정보주체의 권리 행사를 용이하게 하여야 한다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-12-gdpr/
 
     condition_human: |
       삭제권을 포함한 정보주체 권리를 행사할 수단이 제공되지 않거나,
@@ -249,22 +273,28 @@ rules:
     legal_basis:
       - law: GDPR
         article: Art.9(1)
-        note: 특별범주 개인정보의 처리 원칙적 금지
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          인종·민족적 출신, 정치적 견해, 종교적·철학적 신념, 노동조합 가입,
+          유전자정보, 개인 식별 목적의 생체인식정보, 건강정보, 성생활·성적 지향에
+          관한 개인정보의 처리를 원칙적으로 금지한다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-9-gdpr/
       - law: GDPR
         article: Art.9(2)
-        note: 금지의 예외 사유 열거
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          명시적 동의, 고용·사회보장, 중대한 이익, 비영리단체의 정당한 활동,
+          공개된 정보, 법적 청구, 중대한 공익, 산업보건, 공중보건,
+          기록보존·연구·통계 등 Art.9(1) 금지의 예외를 열거한다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-9-gdpr/
       - law: GDPR
         article: Art.5(1)(c)
-        note: data minimisation
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: "'data minimisation' — 처리 목적에 적절하고 관련되며 필요한 범위로 제한될 것"
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-5-gdpr/
 
     condition_human: |
       내용이 제한되지 않는 자유 텍스트가 저장 또는 이전되는데
@@ -294,7 +324,10 @@ rules:
 
     related: [KR-SPC-001]
     notes: |
-      Art.9 특별범주와 국내 민감정보(제23조)는 열거 항목이 다르다.
+      원문 대조 결과 Art.9(1)의 열거에는 인종·민족적 출신, 유전자정보,
+      개인 식별 목적의 생체인식정보가 포함된다. 국내 제23조 제1항 본문의 열거
+      (사상·신념, 노동조합·정당 가입·탈퇴, 정치적 견해, 건강, 성생활 등)와
+      범위가 일치하지 않는다.
       To-Be에서 항목 대조표를 작성해 탐지 대상 집합을 관할별로 정의할 것.
 
       Art.5(1)(c) 최소수집 관점에서는 '판정에 사용한 뒤 원문을 보관할 필요가 있는가'
@@ -309,20 +342,25 @@ rules:
     legal_basis:
       - law: GDPR
         article: Art.8(1)
-        note: 정보사회서비스 제공 시 아동 동의 요건 — 16세 기준, 회원국이 13세까지 하향 가능
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          아동에게 직접 제공되는 정보사회서비스에서 Art.6(1)(a) 동의를 근거로 처리하는
+          경우, 아동이 **16세 미만**이면 친권자 등의 동의·승인이 있어야 적법하다.
+          회원국은 법으로 **최저 13세**까지 낮출 수 있다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-8-gdpr/
       - law: GDPR
         article: Art.8(2)
-        note: 법정대리인 동의 확인을 위한 합리적 노력
-        verification: 확인필요
-        checked_at: null
-        source: null
+        note: |
+          컨트롤러는 이용 가능한 기술을 고려하여 친권자 등의 동의·승인 여부를
+          확인하기 위한 합리적 노력을 하여야 한다
+        verification: 확인완료
+        checked_at: "2026-08-10"
+        source: https://gdpr-info.eu/art-8-gdpr/
 
     condition_human: |
-      정보사회서비스가 아동에게 제공될 수 있는데
-      연령 확인 수단과 법정대리인 동의 확인 절차가 없는 경우.
+      정보사회서비스가 아동에게 제공될 수 있고 동의를 처리 근거로 삼는데
+      연령 확인 수단과 친권자 동의 확인 절차가 없는 경우.
     check_expr: |
       service.age_verification is None and service.child_access_restricted is False
 
@@ -335,9 +373,9 @@ rules:
     applies_to: [A-01, B-01, B-04]
 
     remediation:
-      - 회원국별 아동 연령 기준 조사표 작성
+      - 회원국별 아동 연령 기준 조사표 작성 (13~16세 범위)
       - 관할 판별 후 연령 게이트를 분기하는 구조 설계
-      - 법정대리인 동의 확인 방법 검토
+      - 친권자 동의 확인 방법 검토 — Art.8(2)의 '합리적 노력' 수준 정의
 
     evidence:
       - 회원국별 연령 기준 조사표
@@ -347,8 +385,9 @@ rules:
     notes: |
       ★ 관할 축이 실제 설계를 바꾸는 대표 사례.
 
+      원문 대조로 16세 기본·최저 13세 하향 가능을 확인했다.
       국내 만 14세 미만 기준으로 게이트를 하나 만들면 국내는 충족하지만,
-      Art.8 기본 16세 및 회원국별 하향(13~16세) 기준에서는 15세 이용자가
+      Art.8 기준(회원국에 따라 13~16세)에서는 15세 이용자가
       국내 통과·EU 미충족으로 갈린다.
 
       단일 연령 게이트로는 양 관할을 동시에 만족시킬 수 없으므로
