@@ -1,5 +1,7 @@
 # INCANT_Privacy
 
+[![CI](https://github.com/jaepaly/INCANT_Privacy/actions/workflows/ci.yml/badge.svg)](https://github.com/jaepaly/INCANT_Privacy/actions/workflows/ci.yml)
+
 **자유 텍스트를 외부 생성형 AI로 처리하는 게임 서비스의 개인정보 컴플라이언스 진단.**
 
 개인정보 흐름을 식별하고, 국내 개인정보보호법과 GDPR 양 관할에서 리스크를 진단해 통제와 증적으로 연결하는 것을 목표로 합니다.
@@ -85,7 +87,7 @@ tools/
 reports/                룰 적용 결과 (생성물)
 ```
 
-원본(YAML)만 고치고 문서는 다시 생성합니다. `--check`를 붙이면 동기화 여부만 검증합니다.
+원본(YAML)만 고치고 문서는 다시 생성합니다.
 
 ```bash
 python tools/render_rules.py && python tools/render_inventory.py && python tools/run_rules.py
@@ -94,6 +96,20 @@ python -m pytest              # 통제 증적
 
 **엔진이 내는 것은 Finding 후보입니다.** 위험도 산정·리스크 시나리오·개선 우선순위는
 인벤토리에 없는 맥락 판단이므로 사람이 붙입니다 — [reports/README.md](reports/README.md).
+
+## CI
+
+산출물이 대부분 생성물이라 원본과 어긋나기 쉽습니다. `--check`가 그 규율을 강제하고,
+통제 테스트가 "동작함을 입증했다"는 주장을 지탱합니다. 매 실행마다 현재 룰 수·미검증
+조문 수·Finding 후보 수를 작업 요약에 남깁니다.
+
+```bash
+python tools/render_rules.py --check
+python tools/render_inventory.py --check
+python tools/run_rules.py --check
+python -m pytest
+python tools/ci_summary.py    # 현재 상태 요약
+```
 
 ## 원칙
 

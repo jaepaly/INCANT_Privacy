@@ -1,0 +1,54 @@
+name: CI
+
+# 이 저장소의 산출물은 대부분 생성물이다. 원본(YAML)만 고치고 문서를 다시 생성하는
+# 규율을 사람이 지키기는 어렵다. --check가 그 규율을 강제한다.
+#
+# 통제(controls/)의 테스트는 증적이다. 깨진 채로 머지되면 "동작함을 입증했다"는
+# 주장이 성립하지 않는다.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # pyproject에도 선언되어 있으나, 프로젝트 자체를 설치할 필요가 없어
+      # 의존성만 직접 설치한다.
+      - name: 의존성 설치
+        run: pip install --disable-pip-version-check pyyaml pytest
+
+      # ── 생성물이 원본과 동기화되어 있는가 ──────────────────
+      - name: 룰 카탈로그 동기화 검증
+        run: python tools/render_rules.py --check
+
+      - name: 인벤토리 문서 동기화 검증
+        run: python tools/render_inventory.py --check
+
+      - name: 룰 적용 결과 동기화 검증
+        run: python tools/run_rules.py --check
+
+      # ── 통제가 실제로 동작하는가 (증적) ────────────────────
+      - name: 통제 테스트
+        run: python -m pytest
+
+      # ── 현재 컴플라이언스 상태 ────────────────────────────
+      - name: 상태 요약
+        if: always()
+        run: python tools/ci_summary.py --github
