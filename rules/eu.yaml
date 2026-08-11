@@ -1,0 +1,355 @@
+meta:
+  jurisdiction: EU
+  jurisdiction_name: EU — General Data Protection Regulation (GDPR)
+  version: "0.1"
+  updated: "2026-08-10"
+  note: |
+    모든 legal_basis의 verification이 '확인필요' 상태다.
+    EUR-Lex 원문 및 EDPB 가이드라인 대조 전이므로 조항 번호·항 구분에 오류가 있을 수 있다.
+
+  applicability: |
+    ⚠️ As-Is(INCANT 데모)에 GDPR이 적용되는지 자체가 확정되지 않았다.
+
+    Art.3(2)(a)는 EU 역내 정보주체에게 재화·용역을 '제공(offering)'하는 경우를 요건으로
+    하며, 단순히 웹에서 접근 가능하다는 사실만으로는 부족하고 EU를 향한 의도가
+    인정되어야 한다는 것이 일반적 해석이다(EDPB Guidelines 3/2018 — 확인필요).
+
+    INCANT은 한국어 전용 해커톤 데모로 EU 이용자를 대상으로 하지 않으며,
+    다국어 지원·EU 통화 표기·EU 대상 홍보가 없다. 따라서 현 상태에서 GDPR이
+    적용된다고 단정할 수 없다.
+
+    그러므로 이 룰셋을 As-Is에 적용한 결과는 **"GDPR이 적용된다고 가정할 경우"의
+    조건부 판정**으로 읽어야 한다. 판정 결과를 위반 사실로 기재하지 않는다.
+
+    반대로 To-Be(스토어 출시·다국어 지원)에서는 적용 요건이 충족될 가능성이 높으므로,
+    이 룰셋은 To-Be에서 무조건부로 적용된다.
+
+rules:
+  # ────────────────────────────────────────────────────────────
+  - id: EU-TRP-001
+    domain: 투명성
+    title: 정보주체에 대한 정보 제공 의무 미이행
+    summary: 수집 시점에 제공해야 할 법정 고지 항목이 전혀 제공되지 않는다.
+
+    legal_basis:
+      - law: GDPR
+        article: Art.12(1)
+        note: 간결하고 이해하기 쉬우며 접근 가능한 형태로 제공
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.13
+        note: 정보주체로부터 직접 수집하는 경우 제공해야 할 항목
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      정보주체로부터 직접 개인정보를 수집하면서
+      Art.13이 열거하는 고지 항목이 제공되지 않는 경우.
+    check_expr: |
+      service.privacy_notice is None
+        or missing_items(service.privacy_notice, GDPR_ART13_REQUIRED) != []
+
+    severity_base: HIGH
+    severity_rationale: |
+      Art.13은 항목을 열거식으로 요구하므로 '문서가 없음'은 전 항목 결손이다.
+      특히 수령인 범주와 제3국 이전 근거는 이 서비스의 핵심 흐름에 해당하는데
+      그 사실 자체가 이용자에게 전혀 전달되지 않는다.
+
+    applies_to: [A-01, A-02, A-03, A-04, A-05, B-01, B-02, B-03, B-04, B-05, C-01]
+
+    remediation:
+      - Art.13 요구 항목을 충족하는 privacy notice 작성
+      - 수집 시점(최초 실행·입력 전)에 접근 가능한 위치에 배치
+      - 국내 처리방침과 항목 대조표 작성
+
+    evidence:
+      - privacy notice 문서 및 Art.13 항목 매핑표
+      - 노출 시점·위치 스크린샷
+
+    related: [KR-TRP-001]
+    notes: |
+      국내 제30조 대비 요구 항목이 더 구체적이다 — 수령인 또는 수령인의 범주,
+      제3국 이전 시 적정성 결정 또는 적절한 안전조치의 근거, 보유기간 또는
+      그 산정 기준, 감독기구에 대한 불만제기권 등.
+
+      To-Be에서 문서를 하나만 만들 경우 KR·EU 요구 항목의 합집합으로 설계하고,
+      관할별로 필요한 부분만 노출하는 구조를 검토할 것.
+
+  # ────────────────────────────────────────────────────────────
+  - id: EU-TRF-001
+    domain: 국외이전
+    title: 제3국 이전 근거 부재 및 재이전 미검토
+    summary: 미국 소재 사업자로의 이전에 대한 법적 근거가 확인되지 않는다.
+
+    legal_basis:
+      - law: GDPR
+        article: Art.44
+        note: 제3국 이전의 일반 원칙
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.45
+        note: 적정성 결정에 근거한 이전
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.46
+        note: 적절한 안전조치에 근거한 이전
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      개인정보가 제3국으로 이전되는데
+      적정성 결정·적절한 안전조치·특정 상황의 예외 중 어느 근거도 확인되지 않는 경우.
+      이전받은 자가 다시 제3국으로 이전하는 경우 그 재이전 근거도 포함한다.
+    check_expr: |
+      any(f.destination.country not in EEA for f in flows)
+        and f.transfer_mechanism is None
+
+    severity_base: CRITICAL
+    severity_rationale: |
+      이전 근거 부재는 이전 자체를 위법하게 만드는 요건 결손이며,
+      고지 미비처럼 사후 보완으로 치유되는 성격이 아니다.
+      이전 대상이 이용자 자유 텍스트라 내용 범위를 특정할 수 없다는 점도 가중 요소다.
+
+    applies_to: [A-01, A-02, A-03, A-04, C-01]
+
+    remediation:
+      - Google·Cloudflare·GitHub 각각의 이전 근거 확인 및 문서화
+      - 데이터 처리 계약(DPA) 및 표준계약조항(SCC) 체결 여부 확인
+      - 이전 경로 전체를 단계별로 도식화하고 각 구간의 근거 명시
+
+    evidence:
+      - 이전 경로 도식 및 구간별 근거 대조표
+      - 각 사업자와의 DPA·SCC 사본
+      - 이전 영향 검토 문서
+
+    related: [KR-TRF-001]
+    notes: |
+      이 룰의 핵심은 단일 이전이 아니라 **연쇄**다.
+
+        EU 정보주체 → 국내 서비스 → 미국 LLM 사업자
+
+      한국은 EU 적정성 결정 대상국이므로(2021년 채택 — 확인필요) 첫 구간은
+      상대적으로 수월하나, 적정성 결정은 그 다음 구간(재이전)을 커버하지 않는다.
+      두 번째 구간의 근거를 별도로 확보해야 한다.
+
+      Art.35 DPIA 요건 해당 여부도 함께 검토 대상이나 영역이 달라
+      다음 배치(DPA 영역)에서 다룬다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: EU-RET-001
+    domain: 보유·파기
+    title: 보관 기간 제한 원칙 위반
+    summary: 목적 달성에 필요한 기간을 넘겨 무기한 보관된다.
+
+    legal_basis:
+      - law: GDPR
+        article: Art.5(1)(e)
+        note: storage limitation — 필요한 기간을 초과하지 않는 형태로 보관
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.5(2)
+        note: accountability — 원칙 준수를 입증할 책임
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      개인정보의 보관 기간이 처리 목적에 필요한 범위로 제한되지 않거나,
+      그 제한이 실제로 이행되고 있음을 입증할 수 없는 경우.
+    check_expr: |
+      item.retention_period is None or item.deletion_procedure is None
+
+    severity_base: HIGH
+    severity_rationale: |
+      Art.5는 원칙 조항이며 Art.5(2)에 따라 준수 사실을 입증할 책임이 처리자에게 있다.
+      기간 정의와 파기 수단이 모두 없으면 입증 자체가 불가능하다.
+
+    applies_to: [A-05, B-01, B-02, B-03, B-04, B-05]
+
+    remediation:
+      - 목적별 보유기간 산정 근거 문서화
+      - 자동 파기 구현 및 실행 기록 확보
+      - accountability 입증 자료 체계 수립
+
+    evidence:
+      - 보유기간 산정 근거 문서
+      - 파기 구현 코드 및 테스트 결과
+      - 파기 실행 기록
+
+    related: [KR-RET-001]
+    notes: |
+      국내 제21조가 '보유기간 경과 시 파기'라는 행위 의무 중심인 데 비해
+      Art.5(1)(e)는 원칙 + 입증책임(Art.5(2)) 구조다.
+      To-Be에서 파기 로그를 남기는 설계는 EU 쪽 요구에서 나온다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: EU-RGT-001
+    domain: 정보주체 권리
+    title: 삭제권 행사 수단 부재
+    summary: 정보주체가 삭제를 요구하거나 직접 삭제할 수단이 제공되지 않는다.
+
+    legal_basis:
+      - law: GDPR
+        article: Art.17
+        note: right to erasure
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.12(2)
+        note: 정보주체의 권리 행사를 용이하게 할 의무
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      삭제권을 포함한 정보주체 권리를 행사할 수단이 제공되지 않거나,
+      행사 방법이 안내되지 않아 사실상 행사가 불가능한 경우.
+    check_expr: |
+      service.erasure_mechanism is None or service.privacy_contact is None
+
+    severity_base: MEDIUM
+    severity_rationale: |
+      단말 저장이라는 완화 요소는 국내 룰과 동일하나,
+      Art.12(2)가 '권리 행사를 용이하게 할' 적극적 의무를 부과한다는 점에서
+      "이용자가 브라우저로 지울 수 있다"는 사실만으로는 충족되지 않는다.
+
+    applies_to: [B-01, B-02, B-03, B-04, B-05]
+
+    remediation:
+      - 게임 내 데이터 삭제 기능 제공
+      - privacy notice에 권리 행사 방법 및 연락 창구 명시
+      - 권리 행사 요청 처리 절차 수립
+
+    evidence:
+      - 삭제 기능 구현 코드 및 테스트 결과
+      - 권리 행사 절차 문서
+
+    related: [KR-RGT-001]
+    notes: |
+      Art.20 데이터 이동권 해당 여부는 처리 근거에 따라 달라지므로
+      처리 근거(LAW 영역) 확정 후 별도 판단한다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: EU-SPC-001
+    domain: 특별범주
+    title: 자유 텍스트를 통한 특별범주 정보의 비의도적 처리
+    summary: 통제 없는 자유 텍스트 채널이 Art.9 특별범주 정보의 유입 경로가 된다.
+
+    legal_basis:
+      - law: GDPR
+        article: Art.9(1)
+        note: 특별범주 개인정보의 처리 원칙적 금지
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.9(2)
+        note: 금지의 예외 사유 열거
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.5(1)(c)
+        note: data minimisation
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      내용이 제한되지 않는 자유 텍스트가 저장 또는 이전되는데
+      특별범주 정보의 유입을 탐지·차단하는 통제가 없는 경우.
+    check_expr: |
+      channel.input_type == "free_text"
+        and (channel.is_stored or channel.is_transferred)
+        and channel.special_category_filter is None
+
+    severity_base: HIGH
+    severity_rationale: |
+      Art.9(1)은 원칙적 금지 구조이므로, 유입이 실제로 발생하면
+      Art.9(2)의 예외에 해당하지 않는 한 처리 자체가 허용되지 않는다.
+      의도하지 않은 수집이라는 사정이 예외 사유가 되지는 않는다.
+
+    applies_to: [A-01, A-02, A-03, A-04, B-01]
+
+    remediation:
+      - 전송·저장 전 특별범주 탐지 계층 도입
+      - 탐지 시 저장 제외 및 전송 차단 정책 적용
+      - 최소수집 관점에서 자유 텍스트 보관 필요성 재검토
+
+    evidence:
+      - 탐지 모듈 구현 코드 및 테스트 케이스
+      - 탐지 정확도 측정 결과
+      - 보관 필요성 검토 문서
+
+    related: [KR-SPC-001]
+    notes: |
+      Art.9 특별범주와 국내 민감정보(제23조)는 열거 항목이 다르다.
+      To-Be에서 항목 대조표를 작성해 탐지 대상 집합을 관할별로 정의할 것.
+
+      Art.5(1)(c) 최소수집 관점에서는 '판정에 사용한 뒤 원문을 보관할 필요가 있는가'
+      자체가 쟁점이다. 저장하지 않는 설계가 가장 강한 통제일 수 있다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: EU-AGE-001
+    domain: 아동
+    title: 아동 동의 요건 미충족 및 연령 확인 부재
+    summary: 회원국별로 다른 아동 연령 기준을 확인할 수단이 없다.
+
+    legal_basis:
+      - law: GDPR
+        article: Art.8(1)
+        note: 정보사회서비스 제공 시 아동 동의 요건 — 16세 기준, 회원국이 13세까지 하향 가능
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: GDPR
+        article: Art.8(2)
+        note: 법정대리인 동의 확인을 위한 합리적 노력
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      정보사회서비스가 아동에게 제공될 수 있는데
+      연령 확인 수단과 법정대리인 동의 확인 절차가 없는 경우.
+    check_expr: |
+      service.age_verification is None and service.child_access_restricted is False
+
+    severity_base: MEDIUM
+    severity_rationale: |
+      국내 룰과 마찬가지로 연령을 알 수 없어 위반을 확정할 수 없는 상태다.
+      다만 기준 연령이 회원국별로 갈리므로 단일 게이트로 해소되지 않는다는 점에서
+      To-Be 설계 난이도는 국내보다 높다.
+
+    applies_to: [A-01, B-01, B-04]
+
+    remediation:
+      - 회원국별 아동 연령 기준 조사표 작성
+      - 관할 판별 후 연령 게이트를 분기하는 구조 설계
+      - 법정대리인 동의 확인 방법 검토
+
+    evidence:
+      - 회원국별 연령 기준 조사표
+      - 연령 게이트 분기 설계 문서
+
+    related: [KR-AGE-001]
+    notes: |
+      ★ 관할 축이 실제 설계를 바꾸는 대표 사례.
+
+      국내 만 14세 미만 기준으로 게이트를 하나 만들면 국내는 충족하지만,
+      Art.8 기본 16세 및 회원국별 하향(13~16세) 기준에서는 15세 이용자가
+      국내 통과·EU 미충족으로 갈린다.
+
+      단일 연령 게이트로는 양 관할을 동시에 만족시킬 수 없으므로
+      To-Be에서 관할 판별 → 기준 분기 구조가 필요하다.

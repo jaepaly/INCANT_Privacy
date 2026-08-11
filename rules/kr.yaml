@@ -1,0 +1,304 @@
+meta:
+  jurisdiction: KR
+  jurisdiction_name: 대한민국 — 개인정보 보호법
+  version: "0.1"
+  updated: "2026-08-10"
+  note: |
+    모든 legal_basis의 verification이 '확인필요' 상태다.
+    국가법령정보센터 원문 대조 전이므로 조문 번호·항 구분에 오류가 있을 수 있다.
+
+rules:
+  # ────────────────────────────────────────────────────────────
+  - id: KR-TRP-001
+    domain: 투명성
+    title: 개인정보 처리방침 미수립·미공개
+    summary: 개인정보를 처리하면서 처리방침을 수립·공개하지 않았다.
+
+    legal_basis:
+      - law: 개인정보 보호법
+        article: 제30조 제1항
+        note: 개인정보처리자는 처리방침을 정하여야 한다
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: 개인정보 보호법
+        article: 제30조 제2항
+        note: 정보주체가 쉽게 확인할 수 있도록 공개하여야 한다
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      개인정보를 처리하는 서비스에 처리방침이 존재하지 않거나,
+      존재하더라도 이용자가 접근할 수 있는 경로로 공개되어 있지 않은 경우.
+    check_expr: |
+      service.privacy_policy.url is None
+
+    severity_base: HIGH
+    severity_rationale: |
+      처리방침은 다른 모든 고지 의무가 실려 나가는 매체다.
+      부재 시 국외이전 고지·보유기간 고지·권리행사 방법 안내가 함께 불가능해지므로,
+      단일 미비가 아니라 다수 의무의 선행 결손으로 본다.
+
+    applies_to: [A-01, A-02, A-03, A-04, A-05, B-01, B-02, B-03, B-04, B-05, C-01]
+
+    remediation:
+      - 개인정보 처리방침 수립
+      - 게임 타이틀 화면 및 최초 실행 시 상시 접근 가능한 경로 제공
+      - 처리방침 개정 이력 관리 체계 수립
+
+    evidence:
+      - 게시된 처리방침 URL 및 최초 게시일
+      - 서비스 내 접근 경로 스크린샷
+      - 개정 이력 문서
+
+    related: [EU-TRP-001]
+    notes: |
+      GDPR Art.13은 국내 제30조보다 고지 항목이 구체적이다(수령인 범주, 이전 근거,
+      항목별 보유기간 산정 기준, 감독기구 불만제기권 등).
+      동일한 '처리방침 부재' 상태라도 To-Be에서 채워야 할 항목 수가 다르므로
+      EU-TRP-001과 함께 볼 것.
+
+  # ────────────────────────────────────────────────────────────
+  - id: KR-TRF-001
+    domain: 국외이전
+    title: 국외 이전 고지·동의 부재
+    summary: 이용자 입력을 국외 사업자에게 전송하면서 고지·동의 절차가 없다.
+
+    legal_basis:
+      - law: 개인정보 보호법
+        article: 제28조의8
+        note: 국외 이전의 요건 및 고지사항
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      개인정보가 국외 사업자에게 전송되는 흐름이 존재하는데,
+      이전받는 자·이전 국가·이전 항목·이전 목적·보유기간 등의 고지와
+      법정 이전 근거(동의 등)가 확인되지 않는 경우.
+    check_expr: |
+      any(f.destination.is_overseas for f in flows)
+        and service.overseas_transfer_disclosure is None
+
+    severity_base: HIGH
+    severity_rationale: |
+      이전되는 것이 정형 필드가 아니라 이용자가 자유롭게 작성한 문장이다.
+      전송 내용을 사전에 특정할 수 없어 고지 부재의 영향 범위를 한정할 수 없다.
+
+    applies_to: [A-01, A-02, A-03, A-04, C-01]
+
+    remediation:
+      - 국외 이전 현황 정리 — 이전받는 자, 국가, 항목, 목적, 보유기간
+      - 처리방침에 국외 이전 항목 반영
+      - 이전 근거 확보 및 이전 시점 고지 절차 설계
+
+    evidence:
+      - 국외 이전 현황표
+      - 처리방침 내 국외 이전 고지 문구
+      - 이전 근거 확보 문서
+
+    related: [EU-TRF-001]
+    notes: |
+      A-01·A-02·A-03·A-04는 Google(미국), C-01은 GitHub(미국)이다.
+      C-01은 호스팅 사업자 내부 로그로 서비스 측 통제 범위 밖이나,
+      이전 흐름 자체는 존재하므로 흐름표에는 남기고 통제 가능성은 별도 판단한다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: KR-RET-001
+    domain: 보유·파기
+    title: 보유기간 미정의 및 파기 절차 부재
+    summary: 모든 저장 항목의 보유기간이 정의되어 있지 않고 파기 절차가 없다.
+
+    legal_basis:
+      - law: 개인정보 보호법
+        article: 제21조 제1항
+        note: 보유기간 경과·목적 달성 시 지체 없이 파기
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: 개인정보 보호법 시행령
+        article: 제16조
+        note: 파기의 방법 및 기한
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      개인정보 항목에 보유기간이 정의되어 있지 않거나,
+      보유기간이 정의되어 있어도 경과 시 파기를 실행하는 절차·수단이 없는 경우.
+    check_expr: |
+      item.retention_period is None or item.deletion_procedure is None
+
+    severity_base: HIGH
+    severity_rationale: |
+      B-01(주문 입력 원문)이 단말에 무기한 남는다.
+      보유기간 미정의는 그 자체로 미비이지만, 파기 수단까지 부재하면
+      기간을 정의하더라도 이행할 방법이 없다는 점에서 구조적 결손이다.
+
+    applies_to: [A-05, B-01, B-02, B-03, B-04, B-05]
+
+    remediation:
+      - 항목별 보유기간 정의 및 산정 근거 문서화
+      - 보유기간 경과 데이터의 자동 파기 구현
+      - 파기 실행 기록 확보 방안 수립
+
+    evidence:
+      - 항목별 보유기간 정의표
+      - 파기 로직 구현 코드 및 테스트 결과
+      - 파기 실행 로그 샘플
+
+    related: [EU-RET-001]
+    notes: |
+      A-05(IP)는 레이트리밋용 인메모리 보관으로 성격이 다르다.
+      코드상 60초 윈도우 밖은 필터되나 엔트리 자체의 잔존 시간은 확인되지 않았다
+      (As-Is 문서 U-04). 보유기간 '미정의'로 분류하되 별도 확인 후 재평가한다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: KR-RGT-001
+    domain: 정보주체 권리
+    title: 정보주체 권리행사 수단 부재
+    summary: 저장된 데이터를 열람·삭제할 수단이 서비스에 없다.
+
+    legal_basis:
+      - law: 개인정보 보호법
+        article: 제35조
+        note: 개인정보의 열람
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: 개인정보 보호법
+        article: 제36조
+        note: 개인정보의 정정·삭제
+        verification: 확인필요
+        checked_at: null
+        source: null
+      - law: 개인정보 보호법
+        article: 제38조
+        note: 권리 행사의 방법 및 절차
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      정보주체가 자신의 개인정보를 열람하거나 삭제할 수 있는 수단이
+      서비스 내에 제공되지 않고, 권리행사 접수 창구도 안내되지 않는 경우.
+    check_expr: |
+      service.data_access_ui is None and service.privacy_contact is None
+
+    severity_base: MEDIUM
+    severity_rationale: |
+      저장 위치가 이용자 단말이므로 브라우저 기능으로 삭제가 물리적으로 가능하다는
+      완화 요소가 있다. 다만 그것은 이용자가 저장 사실과 키 구조를 안다는 전제이며,
+      처리방침이 없어 그 사실을 알 방법이 없다(KR-TRP-001과 결합 시 실효성 소멸).
+      권리행사 창구 안내 의무는 저장 위치와 무관하게 별도로 성립한다.
+
+    applies_to: [B-01, B-02, B-03, B-04, B-05]
+
+    remediation:
+      - 게임 내 저장 데이터 열람·삭제 기능 제공
+      - 처리방침에 권리행사 방법 및 접수 창구 명시
+
+    evidence:
+      - 삭제 기능 구현 코드 및 동작 테스트 결과
+      - 처리방침 내 권리행사 안내 문구
+
+    related: [EU-RGT-001]
+    notes: |
+      As-Is 확인 결과 저장소 전체에서 localStorage.removeItem 호출이 0건이다.
+      게임 내 데이터 초기화 UI도 존재하지 않는다.
+
+  # ────────────────────────────────────────────────────────────
+  - id: KR-SPC-001
+    domain: 특별범주
+    title: 자유 텍스트를 통한 민감정보 비의도적 수집·국외전송
+    summary: 입력 내용을 제한하지 않는 자유 텍스트 채널이 민감정보 유입 경로로 열려 있다.
+
+    legal_basis:
+      - law: 개인정보 보호법
+        article: 제23조 제1항
+        note: 민감정보의 처리 제한 — 별도 동의 등 요건
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      이용자가 내용을 자유롭게 작성할 수 있는 입력 채널이 존재하고,
+      해당 입력이 저장 또는 외부 전송되는데,
+      전송·저장 전에 민감정보를 탐지하거나 차단하는 통제가 없는 경우.
+    check_expr: |
+      channel.input_type == "free_text"
+        and (channel.is_stored or channel.is_transferred)
+        and channel.pii_prefilter is None
+
+    severity_base: HIGH
+    severity_rationale: |
+      수집 의도가 없어도 실제로 유입되면 처리한 것이 된다.
+      게임 특성상 이용자가 자신의 감정·신체 상태를 문장에 담을 유인이 크고
+      ("배고프다", "피곤하다" 같은 입력을 판정 프롬프트가 직접 예시로 다룬다),
+      유입된 내용은 저장(B-01)과 국외전송(A-01)을 동시에 거친다.
+
+    applies_to: [A-01, A-02, A-03, A-04, B-01]
+
+    remediation:
+      - 전송 전 개인정보·민감정보 탐지 및 마스킹 계층 도입
+      - 탐지 시 저장 제외 정책 적용
+      - 입력창에 민감정보 입력 자제 안내 표시
+
+    evidence:
+      - 탐지 모듈 구현 코드 및 테스트 케이스
+      - 탐지·차단 동작 검증 결과
+      - 입력창 안내 문구 스크린샷
+
+    related: [EU-SPC-001]
+    notes: |
+      현재 존재하는 입력 처리는 모두 개인정보 목적이 아니다.
+      60자 절단은 토큰 비용, 무의미 입력 판별은 판정 품질,
+      blocked 판정은 콘텐츠 안전 목적이며 판정은 전송 이후에 이루어진다.
+
+      국내 민감정보(제23조)와 GDPR special categories(Art.9)는 범위가 다르다.
+      To-Be 단계에서 항목 대조표를 별도로 작성할 것.
+
+  # ────────────────────────────────────────────────────────────
+  - id: KR-AGE-001
+    domain: 아동
+    title: 연령 확인 수단 부재
+    summary: 아동 이용자 여부를 판단할 수단이 없어 법정대리인 동의 요건 충족을 확인할 수 없다.
+
+    legal_basis:
+      - law: 개인정보 보호법
+        article: 제22조의2
+        note: 만 14세 미만 아동의 개인정보 처리 시 법정대리인 동의
+        verification: 확인필요
+        checked_at: null
+        source: null
+
+    condition_human: |
+      아동의 접근이 배제되지 않는 서비스에서 개인정보를 처리하면서,
+      연령을 확인하는 수단도 법정대리인 동의 절차도 없는 경우.
+    check_expr: |
+      service.age_verification is None and service.child_access_restricted is False
+
+    severity_base: MEDIUM
+    severity_rationale: |
+      게임은 아동 접근 가능성이 구조적으로 높다.
+      다만 As-Is는 계정이 없어 연령을 알 수 없으므로 위반 사실을 확정할 수 없고,
+      '판단 불가 상태'라는 점 자체를 미비로 본다.
+      To-Be에서 계정이 도입되면 심각도가 상향될 항목이다.
+
+    applies_to: [A-01, B-01, B-04]
+
+    remediation:
+      - 연령 확인 절차 설계
+      - 만 14세 미만 식별 시 법정대리인 동의 절차 적용
+      - 아동 대상 고지문 별도 작성
+
+    evidence:
+      - 연령 확인 플로우 설계 문서
+      - 법정대리인 동의 절차 구현 결과
+
+    related: [EU-AGE-001]
+    notes: |
+      국내는 만 14세 미만 기준이나 GDPR Art.8은 16세를 기본으로 하고
+      회원국이 13세까지 하향할 수 있다. 즉 단일 연령 게이트로는 양 관할을 동시에
+      만족시킬 수 없다. To-Be에서 관할 분기가 실제 설계를 바꾸는 대표 지점이다.

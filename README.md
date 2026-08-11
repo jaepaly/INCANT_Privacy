@@ -43,11 +43,13 @@
 ## 진행 상황
 
 - [x] As-Is 개인정보 흐름표 — [docs/as-is/01_data_flow_asis.md](docs/as-is/01_data_flow_asis.md)
-- [ ] As-Is Finding 도출 (KR / EU 룰셋 적용)
+- [x] 컴플라이언스 룰 카탈로그 v0.1 — [rules/CATALOG.md](rules/CATALOG.md) · 6개 영역 12룰 (KR 6 / EU 6)
+- [ ] **근거 조문 원문 검증 24건** — 현재 전부 `확인필요` 상태
+- [ ] As-Is Finding 도출 (룰셋 적용)
 - [ ] 동종 서비스 처리방침 벤치마크 (KR판 vs EU판 비교)
 - [ ] To-Be 서비스 모델 및 개인정보 인벤토리
 - [ ] 처리대장 (Processing Register)
-- [ ] 컴플라이언스 룰 카탈로그 (조문 근거 병기)
+- [ ] 룰 확장 — 처리근거·처리위탁·안전조치·영향평가 영역
 - [ ] 리스크 평가 및 대시보드
 - [ ] 통제 참조 구현 — 전송 전 개인정보 탐지 모듈 + 테스트
 - [ ] DPIA
@@ -57,11 +59,22 @@
 
 ```text
 docs/
-  as-is/    실제 코드 기반 분석 (근거: permalink)
-  to-be/    상용화 가정 분석 (근거: 처리방침 벤치마크)
-rules/      컴플라이언스 룰 카탈로그 (jurisdiction 축)
-tools/      통제 참조 구현
-reports/    산출물
+  as-is/            실제 코드 기반 분석 (근거: permalink)
+  to-be/            상용화 가정 분석 (근거: 처리방침 벤치마크)
+rules/
+  kr.yaml           국내 개인정보 보호법 룰 — 원본
+  eu.yaml           GDPR 룰 — 원본
+  CATALOG.md        사람이 읽는 카탈로그 — 생성물
+  README.md         룰 스키마·ID 체계·작성 규칙
+tools/
+  render_rules.py   YAML -> CATALOG.md 생성 및 스키마 검증
+reports/            산출물
+```
+
+룰을 고칠 때는 YAML만 고치고 카탈로그를 다시 생성합니다:
+
+```bash
+python tools/render_rules.py
 ```
 
 ## 원칙
